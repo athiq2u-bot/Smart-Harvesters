@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Harvesters - Precision Farming Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --primary-color: #0A6640;
+            --primary-light: #2E8B57;
+            --secondary-color: #2F4F4F;
+            --accent-color: #FFD700;
+            --background-color: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --light-text: #666666;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .page { display: none; } /* All pages are hidden by default */
+        .page.active { display: block; } /* Show the active page */
+
+        .btn-onboarding, .btn-login, .btn-logout, .btn-signup {
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .primary-btn:hover { background-color: var(--primary-light); transform: translateY(-2px); }
+        .action-button {
+            width: 100%;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            background-color: var(--primary-color);
+            color: white;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .action-button:hover { background-color: var(--primary-light); }
+        .action-button:active { transform: translateY(1px); }
+
+        /* --- Homepage Specific Styles --- */
+        .homepage-header {
+            height: 100vh;
+            background: linear-gradient(135deg, #a4f5b2, #58a45c);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 5%;
+        }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; position: relative; }
+        .navbar a::after {
+            content: ''; position: absolute; left: 0; bottom: -5px; width: 100%; height: 2px;
+            background-color: var(--accent-color); transform: scaleX(0); transition: transform 0.3s ease;
+        }
+        .navbar a:hover::after { transform: scaleX(1); }
+        .hero-section {
+            flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+        .hero-content h1 { font-size: 4rem; margin: 0; }
+        .hero-content p { font-size: 1.2rem; max-width: 600px; }
+        .section-title { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 50px; text-align: center; }
+        .about-section, .services-section { padding: 80px 5%; }
+        .services-section { background-color: var(--card-bg); }
+        .services-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;
+        }
+        .service-card {
+            background-color: var(--background-color); padding: 30px; border-radius: 12px; transition: transform 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;
+        }
+        .service-card .emoji { font-size: 3rem; margin-bottom: 15px; display: block; }
+        .service-card h3 { color: var(--primary-color); }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: var(--card-bg); padding: 40px; border-radius: 12px; width: 90%; max-width: 450px;
+            text-align: center; box-shadow: var(--shadow); transform: translateY(-20px); transition: transform 0.3s ease;
+        }
+        .modal.active .modal-content { transform: translateY(0); }
+        .modal-logo { height: 80px; margin-bottom: 20px; }
+        .modal-content input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #DDD;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        .modal-content label { text-align: left; font-size: 0.9rem; font-weight: 500; color: var(--light-text); display: block; margin-bottom: 5px; }
+        .modal-content button { width: 100%; }
+        .nav-buttons { display: flex; align-items: center; gap: 15px; }
+        .btn-login { color: white; border: 1px solid white; }
+        .btn-login:hover { background-color: rgba(255, 255, 255, 0.2); }
+        .btn-logout { color: white; border: 1px solid white; }
+        .btn-logout:hover { background-color: rgba(255, 255, 255, 0.2); }
+
+        /* --- App Pages --- */
+        .app-container {
+            width: 95%; max-width: 1280px; margin: 20px auto; padding: 30px;
+            border-radius: 20px; background-color: var(--card-bg); box-shadow: var(--shadow);
+        }
+        .app-header {
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
+            border-bottom: 1px solid #E0E0E0; margin-bottom: 25px;
+        }
+        .logo-container { display: flex; align-items: center; }
+        .header-logo { height: 40px; margin-right: 15px; }
+        .app-name { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
+        .user-profile { display: flex; align-items: center; font-weight: 500; color: var(--secondary-color); }
+        .profile-icon { font-size: 1.8rem; margin-left: 10px; color: var(--primary-light); }
+        .dashboard-grid, .crop-grid, .resources-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .card, .crop-card, .resource-card {
+            background-color: var(--background-color); border-radius: var(--border-radius); padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s;
+            display: flex; flex-direction: column;
+        }
+        .card:hover, .crop-card:hover, .resource-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .card-header, .crop-card h3, .resource-card h3 { display: flex; align-items: center; margin-bottom: 15px; }
+        .card-icon { color: var(--primary-color); margin-right: 10px; font-size: 2rem; }
+        .card h3 { margin: 0; font-weight: 600; color: var(--primary-color); font-size: 1.3rem; }
+        .progress-bar-container { width: 100%; height: 15px; background-color: #E0E0E0; border-radius: 8px; overflow: hidden; margin-top: 15px; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #a4f5b2, var(--primary-light)); width: 0%; transition: width 0.5s ease-in-out; }
+        .alerts-card #alertsList { list-style: none; padding: 0; margin: 0; }
+        .alerts-card #alertsList li {
+            background-color: #fff; border-left: 4px solid var(--accent-color); padding: 12px 15px; margin-bottom: 10px;
+            border-radius: 6px; font-size: 0.95em; color: var(--text-color); display: flex; align-items: flex-start;
+        }
+        .alert-tag { font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; margin-right: 10px; }
+        .alert-tag.severe { background-color: #FFEBEE; color: #F44336; border: 1px solid #F44336; }
+        .alert-tag.moderate { background-color: #FFFDE7; color: #FFC107; border: 1px solid #FFC107; }
+        .alert-tag.info { background-color: #E3F2FD; color: #2196F3; border: 1px solid #2196F3; }
+        .chart-container { position: relative; height: 300px; }
+        .crop-card .emoji { font-size: 4rem; text-align: center; }
+        .action-button.small-btn { padding: 10px 15px; font-size: 0.9em; width: auto; align-self: flex-start; }
+        .resource-card .emoji { font-size: 3rem; text-align: center; margin-bottom: 15px; }
+
+        /* AI Assistant */
+        .ai-container { height: 100vh; display: flex; flex-direction: column; background-color: var(--background-color); }
+        .ai-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: var(--card-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .back-btn { text-decoration: none; color: var(--light-text); font-weight: 500; display: flex; align-items: center; }
+        .ai-status { display: flex; align-items: center; }
+        .status { font-size: 0.9em; padding: 4px 10px; border-radius: 15px; font-weight: 500; }
+        .status.online { background-color: #E8F5E9; color: var(--primary-light); }
+        .status.typing { background-color: #FFFDE7; color: #FFC107; }
+        .chat-box { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: #F8F8F8; display: flex; flex-direction: column; }
+        .ai-message, .user-message { display: flex; align-items: flex-end; margin-bottom: 15px; animation: fadeInMessage 0.5s ease-out; }
+        .ai-message { justify-content: flex-start; }
+        .user-message { justify-content: flex-end; }
+        .ai-avatar { font-size: 1.8rem; margin-right: 10px; }
+        .message-bubble { background-color: white; padding: 12px 18px; border-radius: 20px; max-width: 70%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .user-message .message-bubble { background-color: var(--primary-color); color: white; border-bottom-right-radius: 4px; }
+        .ai-message .message-bubble { border-bottom-left-radius: 4px; }
+        .chat-input { display: flex; padding: 10px 20px; border-top: 1px solid #E0E0E0; background-color: var(--card-bg); align-items: center; }
+        .chat-input input { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; margin-right: 10px; font-size: 1rem; }
+        .chat-input button { border: none; background: none; cursor: pointer; color: var(--primary-color); font-size: 2rem; }
+        .voice-btn { color: #58a45c; }
+        .typing-indicator { display: flex; justify-content: center; align-items: center; }
+        .typing-dot { height: 8px; width: 8px; background-color: #CCC; border-radius: 50%; margin: 0 4px; animation: typing-pulse 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing-pulse {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        @keyframes fadeInMessage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- New Styles for Enhanced Features --- */
+        .weather-forecast-card .forecast-list { list-style: none; padding: 0; margin: 0; }
+        .weather-forecast-card .forecast-list li {
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .weather-forecast-card .forecast-list li:last-child { border-bottom: none; }
+        .nav-buttons { display: flex; align-items: center; gap: 15px; }
+        .btn-login { color: white; border: 1px solid white; }
+        .btn-login:hover { background-color: rgba(255, 255, 255, 0.2); }
+        .btn-logout { color: white; border: 1px solid white; }
+        .btn-logout:hover { background-color: rgba(255, 255, 255, 0.2); }
+        .home-icon-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 2rem;
+            display: none;
+        }
+        .app-header .logo-container .home-icon-link {
+            display: block;
+            margin-right: 10px;
+        }
+
+        /* --- Media Queries for Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; text-align: center; }
+            .navbar .nav-links { margin-top: 15px; }
+            .navbar .nav-links a { margin: 0 10px; }
+            .nav-buttons { margin-top: 15px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1rem; }
+            .section-title { font-size: 2rem; }
+            .services-grid, .dashboard-grid, .crop-grid, .resources-list {
+                grid-template-columns: 1fr;
+            }
+            .app-header { flex-direction: column; text-align: center; }
+            .app-header .user-profile { margin-top: 15px; }
+            .modal-content { padding: 25px; }
+            .ai-header { flex-wrap: wrap; justify-content: center; gap: 10px; }
+            .ai-header h2 { flex-basis: 100%; text-align: center; }
+            .chat-box { padding: 10px; }
+            .message-bubble { max-width: 85%; }
+            .chat-input { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="homepage" class="page active">
+        <header class="homepage-header">
+            <nav class="navbar">
+                <div class="logo-container">
+                    <span class="emoji">🌱</span>
+                    <span class="app-name">Smart Harvesters</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#" onclick="showHomepageSection('about')">About Us</a>
+                    <a href="#" onclick="showHomepageSection('services')">Services</a>
+                    <a href="#" onclick="showPage('crop-library-page')">Crop Library</a>
+                    <a href="#" onclick="showPage('resources-page')">Resources</a>
+                </div>
+                <div class="nav-buttons">
+                    <a href="#" class="btn-login" id="loginBtn">Log In</a>
+                    <a href="#" class="btn-onboarding primary-btn" id="signupBtn">Sign Up</a>
+                    <a href="#" id="logoutBtn" class="btn-logout" style="display:none;">Log Out</a>
+                </div>
+            </nav>
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1 class="animate-text">Farming, Reimagined.</h1>
+                    <p class="animate-text delay-1">Data-driven insights and AI-powered advice to maximize your yield and protect your crops.</p>
+                    <a href="#" class="btn-onboarding primary-btn animate-btn delay-2" id="heroSignupBtn">Sign Up Now</a>
+                </div>
+            </div>
+        </header>
+        <main id="homepage-sections">
+            <section id="about" class="about-section">
+                <div class="about-content">
+                    <h2 class="section-title">Our Mission</h2>
+                    <p class="animate-on-scroll">At Smart Harvesters, we believe in empowering every farmer with technology. We provide a single-window solution that connects you to essential farming data, expert guidance, and a community of like-minded growers. Our goal is to make agriculture smarter, more sustainable, and more profitable for everyone.</p>
+                </div>
+            </section>
+            <section id="services" class="services-section">
+                <h2 class="section-title">How We Help You Grow</h2>
+                <div class="services-grid">
+                    <div class="service-card animate-on-scroll">
+                        <span class="emoji">📊</span>
+                        <h3>Data-Driven Analytics</h3>
+                        <p>Get personalized forecasts on yield, market prices, and soil health for your specific crops and region.</p>
+                    </div>
+                    <div class="service-card animate-on-scroll delay-3">
+                        <span class="emoji">🐛</span>
+                        <h3>Smart Pest & Disease Alerts</h3>
+                        <p>Use our intelligent image recognition tool to instantly diagnose crop issues and get recommended solutions.</p>
+                    </div>
+                    <div class="service-card animate-on-scroll delay-4">
+                        <span class="emoji">🤖</span>
+                        <h3>Vera AI Advisory</h3>
+                        <p>Our AI assistant, Vera, is available 24/7 to answer your farming questions with expert-level knowledge.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="dashboard-page" class="page">
+        <div class="app-container">
+            <header class="app-header">
+                <div class="logo-container">
+                    <a href="#" onclick="showPage('homepage')" class="home-icon-link">
+                        <span class="material-icons">home</span>
+                    </a>
+                    <span class="emoji">🌱</span>
+                    <span class="app-name">Smart Harvesters</span>
+                </div>
+                <div class="user-profile">
+                    <span id="farmDetails"></span>
+                    <a href="#" id="logoutBtnApp" class="btn-logout" style="color: var(--primary-color); border: 1px solid var(--primary-color); padding: 8px 15px; border-radius: 6px; margin-left: 10px;">Log Out</a>
+                </div>
+            </header>
+            <div class="dashboard-grid">
+                <div class="card weather-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">cloud_queue</span>
+                        <h3>Current Weather</h3>
+                    </div>
+                    <div class="weather-content">
+                        <p>Temperature: <span id="currentTemp">--</span></p>
+                        <p>Condition: <span id="currentCondition">--</span></p>
+                        <p>Humidity: <span id="currentHumidity">--</span></p>
+                    </div>
+                </div>
+                <div class="card weather-forecast-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">next_plan</span>
+                        <h3>5-Day Forecast</h3>
+                    </div>
+                    <ul id="forecastList" class="forecast-list"></ul>
+                </div>
+                <div class="card progress-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">timeline</span>
+                        <h3>Crop Growth Progress</h3>
+                    </div>
+                    <div class="progress-content">
+                        <p id="daysSinceSowing">Days since Sowing: --</p>
+                        <p id="cropStage">Stage: --</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="cropProgressBar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card yield-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">assessment</span>
+                        <h3>Yield Forecast</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="yieldChart"></canvas>
+                    </div>
+                    <p id="projectedYield" class="text-center">Projected Yield: --</p>
+                    <p id="yieldInsight" class="text-center">Yield data is being analyzed for this crop.</p>
+                </div>
+                <div class="card alerts-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">notifications_active</span>
+                        <h3>Alerts & Advisories</h3>
+                    </div>
+                    <ul id="alertsList"></ul>
+                </div>
+                <div class="card tip-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">lightbulb_outline</span>
+                        <h3>Daily Tip</h3>
+                    </div>
+                    <p id="dailyTip">No tips available yet. Check back tomorrow!</p>
+                </div>
+                <div class="card soil-health-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">spa</span>
+                        <h3>Soil Health</h3>
+                    </div>
+                    <p>NPK Levels: <span id="npkLevels">--</span></p>
+                    <p>pH Level: <span id="phLevel">--</span></p>
+                    <div class="chart-container">
+                        <canvas id="soilChart"></canvas>
+                    </div>
+                </div>
+                <div class="card market-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">trending_up</span>
+                        <h3>Market Prices</h3>
+                    </div>
+                    <p>Current Price: <span id="currentPrice">--</span></p>
+                    <div class="chart-container">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                </div>
+                <div class="card ai-cta-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">smart_toy</span>
+                        <h3>Vera Assistant</h3>
+                    </div>
+                    <p>Need expert advice? Chat with your AI partner for instant solutions.</p>
+                    <a href="#" onclick="showPage('ai-page')" class="action-button">Launch Vera</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-page" class="page">
+        <div class="ai-container">
+            <header class="ai-header">
+                <a href="#" onclick="showPage('dashboard-page')" class="back-btn">
+                    <span class="material-icons">arrow_back</span> Back to Dashboard
+                </a>
+                <h2>Vera</h2>
+                <div class="ai-status">
+                    <span id="aiStatus" class="status online">Online</span>
+                </div>
+            </header>
+            <div id="chatBox" class="chat-box"></div>
+            <div class="chat-input">
+                <input type="text" id="textInput" placeholder="Ask Vera anything about your farm...">
+                <button id="voiceBtn" class="voice-btn"><span class="material-icons">mic</span></button>
+                <button id="sendBtn" class="send-btn"><span class="material-icons">send</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="crop-library-page" class="page">
+        <div class="app-container">
+            <header class="app-header">
+                <div class="logo-container">
+                    <a href="#" onclick="showPage('homepage')" class="home-icon-link">
+                        <span class="material-icons">home</span>
+                    </a>
+                    <span class="emoji">🌱</span>
+                    <span class="app-name">Smart Harvesters</span>
+                </div>
+                <h2>Crop Library</h2>
+            </header>
+            <section class="crop-grid">
+                <div class="crop-card">
+                    <div class="emoji">🌾</div>
+                    <h3>Rice</h3>
+                    <p>A staple crop. Learn about cultivation, pests, and harvest cycles for rice.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🌽</div>
+                    <h3>Maize</h3>
+                    <p>A comprehensive guide to growing healthy maize crops.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🥔</div>
+                    <h3>Potatoes</h3>
+                    <p>Tips for planting, managing, and harvesting potatoes.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🌱</div>
+                    <h3>Soybeans</h3>
+                    <p>An in-depth guide to growing protein-rich soybeans.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🥥</div>
+                    <h3>Coconut</h3>
+                    <p>Kerala's iconic crop. Tips on palm management, pests, and yield optimization.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🌳</div>
+                    <h3>Rubber</h3>
+                    <p>Information on tapping techniques, disease control, and soil management for rubber plantations.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🌶️</div>
+                    <h3>Cardamom</h3>
+                    <p>A high-value spice crop. Learn about shade management and irrigation for optimal growth.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+                <div class="crop-card">
+                    <div class="emoji">🍵</div>
+                    <h3>Tea</h3>
+                    <p>Tips for pruning, plucking, and maintaining soil pH for robust tea gardens.</p>
+                    <a href="#" class="action-button small-btn">View Details</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="resources-page" class="page">
+        <div class="app-container">
+            <header class="app-header">
+                <div class="logo-container">
+                    <a href="#" onclick="showPage('homepage')" class="home-icon-link">
+                        <span class="material-icons">home</span>
+                    </a>
+                    <span class="emoji">🌱</span>
+                    <span class="app-name">Smart Harvesters</span>
+                </div>
+                <h2>Resources</h2>
+            </header>
+            <section class="resources-list">
+                <div class="resource-card">
+                    <div class="emoji">💰</div>
+                    <h3>Government Subsidies</h3>
+                    <p>Information on farming subsidies and financial aid programs.</p>
+                    <a href="#" class="action-button small-btn">Learn More</a>
+                </div>
+                <div class="resource-card">
+                    <div class="emoji">🧪</div>
+                    <h3>Soil Testing Labs</h3>
+                    <p>Find accredited soil testing laboratories near you.</p>
+                    <a href="#" class="action-button small-btn">Find a Lab</a>
+                </div>
+                <div class="resource-card">
+                    <div class="emoji">📈</div>
+                    <h3>Market Price Data</h3>
+                    <p>Get real-time updates on commodity market prices.</p>
+                    <a href="#" class="action-button small-btn">View Prices</a>
+                </div>
+                <div class="resource-card">
+                    <div class="emoji">💬</div>
+                    <h3>Community Forum</h3>
+                    <p>Connect with other farmers to share tips and ask questions.</p>
+                    <a href="#" class="action-button small-btn">Join Community</a>
+                </div>
+                <div class="resource-card">
+                    <div class="emoji">📸</div>
+                    <h3>Pest & Disease Diagnosis</h3>
+                    <p>Upload a photo of your crop to get an instant diagnosis.</p>
+                    <a href="#" class="action-button small-btn">Diagnose Now</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="onboardingModal" class="modal">
+        <div class="modal-content">
+            <span class="emoji" style="font-size: 4rem;">🌱</span>
+            <div class="modal-header">
+                <h2>Welcome to Smart Harvesters!</h2>
+                <p>Let's personalize your dashboard.</p>
+            </div>
+            <form id="onboardingForm">
+                <input type="text" id="farmerName" placeholder="Your Name" required>
+                <input type="text" id="farmerCrop" placeholder="Your Main Crop (e.g., Rice, Wheat)" required>
+                <input type="text" id="farmerLocation" placeholder="Your Location (e.g., Chennai, India)" required>
+                <input type="number" id="farmerArea" placeholder="Field Area (in acres)" required min="1">
+                <label for="sowingDate">Sowing Date:</label>
+                <input type="date" id="sowingDate" required>
+                <button type="submit" class="action-button">Go to Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="emoji" style="font-size: 4rem;">🔑</span>
+            <div class="modal-header">
+                <h2>Welcome Back!</h2>
+                <p>Enter your details to access your farm dashboard.</p>
+                <p id="loginError" style="color: #F44336; font-size: 0.9em; display: none;">Invalid username or password.</p>
+            </div>
+            <form id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Username" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="action-button">Log In</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const onboardingModal = document.getElementById("onboardingModal");
+        const onboardingForm = document.getElementById("onboardingForm");
+        const loginModal = document.getElementById("loginModal");
+        const loginForm = document.getElementById("loginForm");
+        const loginBtn = document.getElementById("loginBtn");
+        const signupBtn = document.getElementById("signupBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const logoutBtnApp = document.getElementById("logoutBtnApp");
+        const heroSignupBtn = document.getElementById("heroSignupBtn");
+        const navLinks = document.querySelector(".nav-links");
+
+        const allPages = document.querySelectorAll(".page");
+
+        const OPENWEATHERMAP_API_KEY = '5a68735515c15c54366e665a388f6a96';
+        const MARKET_API_KEY = '5a3f12b7a9f8b4d8122d25d19e9927d6';
+        const DIAGNOSIS_API_KEY = '9a13a7c6b90c1f5d2b7c7b8c2d9e1f5d';
+
+        function showPage(pageId) {
+            allPages.forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            if (pageId === 'ai-page') {
+                initializeAiAssistant();
+            }
+        }
+        
+        // This new function handles navigation to specific sections on the homepage
+        function showHomepageSection(sectionId) {
+            showPage('homepage'); // First, make sure the homepage is active
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function handleSignUp(e) {
+            e.preventDefault();
+            const farmerProfile = {
+                name: document.getElementById("farmerName").value,
+                crop: document.getElementById("farmerCrop").value,
+                location: document.getElementById("farmerLocation").value,
+                area: document.getElementById("farmerArea").value,
+                sowingDate: document.getElementById("sowingDate").value
+            };
+            localStorage.setItem("smartHarvestersProfile", JSON.stringify(farmerProfile));
+            localStorage.setItem('isLoggedIn', 'true');
+            onboardingModal.classList.remove("active");
+            initializeDashboard();
+            checkUserSession();
+            showPage('dashboard-page');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const mockUsers = {
+                'farmer': 'pass',
+                'aman': '12345',
+                'sita': 'securepass'
+            };
+            
+            if (mockUsers[username] === password) {
+                localStorage.setItem('isLoggedIn', 'true');
+                loginModal.classList.remove('active');
+                checkUserSession();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function handleLogout(e) {
+            e.preventDefault();
+            localStorage.clear();
+            checkUserSession();
+        }
+
+        function checkUserSession() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const hasProfile = localStorage.getItem('smartHarvestersProfile');
+
+            if (isLoggedIn) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (signupBtn) signupBtn.style.display = 'none';
+                if (heroSignupBtn) heroSignupBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'block';
+                if (logoutBtnApp) logoutBtnApp.style.display = 'block';
+
+                const existingDashboardLink = navLinks.querySelector('a[onclick*="dashboard-page"]');
+                if (!existingDashboardLink) {
+                    const dashboardLink = document.createElement('a');
+                    dashboardLink.href = '#';
+                    dashboardLink.textContent = 'Dashboard';
+                    dashboardLink.onclick = () => showPage('dashboard-page');
+                    navLinks.insertBefore(dashboardLink, navLinks.firstChild);
+                }
+
+                if (hasProfile) {
+                    initializeDashboard();
+                    showPage('dashboard-page');
+                } else {
+                    onboardingModal.classList.add('active');
+                    showPage('homepage');
+                }
+            } else {
+                if (loginBtn) loginBtn.style.display = 'block';
+                if (signupBtn) signupBtn.style.display = 'block';
+                if (heroSignupBtn) heroSignupBtn.style.display = 'block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (logoutBtnApp) logoutBtnApp.style.display = 'none';
+                
+                const dashboardLink = navLinks.querySelector('a[onclick*="dashboard-page"]');
+                if (dashboardLink) {
+                    dashboardLink.remove();
+                }
+
+                showPage('homepage');
+            }
+        }
+
+        async function fetchWeather(location) {
+            try {
+                const geoResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${OPENWEATHERMAP_API_KEY}`);
+                const geoData = await geoResponse.json();
+                if (!geoData || geoData.length === 0) throw new Error("Location not found.");
+                const { lat, lon } = geoData[0];
+                const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}&units=metric`);
+                const weatherData = await weatherResponse.json();
+                const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}&units=metric`);
+                const forecastData = await forecastResponse.json();
+                return {
+                    temp: weatherData.main.temp,
+                    humidity: weatherData.main.humidity,
+                    windSpeed: weatherData.wind.speed,
+                    cloudiness: weatherData.clouds.all,
+                    condition: weatherData.weather[0].description,
+                    forecast: forecastData.list.filter(item => item.dt_txt.includes('12:00:00')).slice(0, 5)
+                };
+            } catch (error) {
+                console.error("Failed to fetch weather data:", error);
+                return { temp: 'N/A', humidity: 'N/A', windSpeed: 'N/A', cloudiness: 'N/A', condition: 'Data unavailable', forecast: [] };
+            }
+        }
+
+        async function fetchMarketData(crop) {
+            console.log(`Fetching market data for ${crop} with API Key: ${MARKET_API_KEY}`);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const mockData = {
+                'rice': { currentPrice: 25.50, trend: [24.0, 24.5, 25.0, 25.8, 25.5] },
+                'wheat': { currentPrice: 18.75, trend: [19.0, 18.8, 18.5, 18.0, 18.75] },
+                'maize': { currentPrice: 12.00, trend: [11.5, 11.8, 12.0, 11.9, 12.0] },
+                'potatoes': { currentPrice: 30.20, trend: [29.5, 30.0, 31.0, 30.8, 30.2] },
+                'soybeans': { currentPrice: 45.00, trend: [44.0, 44.5, 45.0, 44.8, 45.0] },
+                'coconut': { currentPrice: 35.00, trend: [34.5, 35.2, 34.8, 35.5, 35.0] },
+                'rubber': { currentPrice: 150.00, trend: [148.0, 151.0, 150.5, 152.0, 150.0] },
+                'cardamom': { currentPrice: 1200.00, trend: [1150.0, 1210.0, 1195.0, 1205.0, 1200.0] },
+                'tea': { currentPrice: 250.00, trend: [245.0, 255.0, 248.0, 252.0, 250.0] }
+            };
+            return mockData[crop.toLowerCase()] || { currentPrice: 'N/A', trend: [] };
+        }
+
+        async function fetchSoilData(location) {
+            console.log(`Fetching soil data for ${location}`);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            return {
+                npk: [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)],
+                ph: (Math.random() * 2 + 6).toFixed(1)
+            };
+        }
+
+        function initializeDashboard() {
+            const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
+            if (!farmerProfile) return;
+            
+            const farmDetails = document.getElementById("farmDetails");
+            if (farmDetails) {
+                farmDetails.textContent = `${farmerProfile.name}'s Farm (${farmerProfile.crop}, ${farmerProfile.area} acres)`;
+            }
+
+            const daysSinceSowing = document.getElementById("daysSinceSowing");
+            const cropStage = document.getElementById("cropStage");
+            const cropProgressBar = document.getElementById("cropProgressBar");
+            const projectedYield = document.getElementById("projectedYield");
+            const alertsList = document.getElementById("alertsList");
+            const dailyTip = document.getElementById("dailyTip");
+            const currentTemp = document.getElementById("currentTemp");
+            const currentCondition = document.getElementById("currentCondition");
+            const currentHumidity = document.getElementById("currentHumidity");
+            const forecastList = document.getElementById("forecastList");
+            const npkLevels = document.getElementById("npkLevels");
+            const phLevel = document.getElementById("phLevel");
+            const currentPrice = document.getElementById("currentPrice");
+
+            const cropData = {
+                rice: { baseYield: 3.5, growthCycle: 120, stages: { vegetative: 40, flowering: 80, harvest: 120 }, tips: ["Ensure proper drainage to prevent root rot.", "Apply a balanced fertilizer after 30 days of sowing."] },
+                wheat: { baseYield: 2.0, growthCycle: 150, stages: { vegetative: 50, flowering: 100, harvest: 150 }, tips: ["Check for signs of rust disease.", "Timely weeding helps reduce competition for nutrients."] },
+                maize: { baseYield: 4.5, growthCycle: 100, stages: { vegetative: 30, flowering: 60, harvest: 100 }, tips: ["Monitor for corn borer infestations.", "Maize needs consistent moisture, especially during tasseling."] },
+                potatoes: { baseYield: 15, growthCycle: 90, stages: { vegetative: 30, flowering: 50, harvest: 90 }, tips: ["Hilling is crucial to prevent greening of tubers.", "Watch out for late blight disease, especially in cool, wet weather."] },
+                soybeans: { baseYield: 1.8, growthCycle: 110, stages: { vegetative: 35, flowering: 70, harvest: 110 }, tips: ["Proper seed inoculation is essential for nitrogen fixation.", "Scout for soybean aphid colonies on a weekly basis."] },
+                coconut: { baseYield: 10000, growthCycle: 3650, stages: { vegetative: 1000, flowering: 2000, harvest: 3650 }, tips: ["Regular application of coconut husk is a great source of potassium.", "Maintain a clean basin around the tree to prevent pests."] },
+                rubber: { baseYield: 1800, growthCycle: 7300, stages: { vegetative: 2000, flowering: 5000, harvest: 7300 }, tips: ["Proper tapping technique is vital to ensure tree longevity.", "Protect young trees from sun scorching with shades."] },
+                cardamom: { baseYield: 250, growthCycle: 730, stages: { vegetative: 180, flowering: 400, harvest: 730 }, tips: ["Cardamom thrives in shade, so intercropping is often beneficial.", "Timely irrigation is crucial during the flowering and capsule development stages."] },
+                tea: { baseYield: 2.5, growthCycle: 365, stages: { vegetative: 90, flowering: 200, harvest: 365 }, tips: ["Pruning is essential to maintain the flush and quality of leaves.", "Soil pH is critical for tea. Aim for a pH of 4.5 to 5.5."] }
+            };
+            const mockAlerts = { vegetative: { type: "info", message: "Initial irrigation is crucial for germination." }, flowering: { type: "severe", message: "Warning: High humidity can cause fungal diseases. Consider a preventative fungicide spray." } };
+
+            async function updateDashboard() {
+                const weather = await fetchWeather(farmerProfile.location);
+                if (currentTemp) currentTemp.textContent = `${weather.temp}°C`;
+                if (currentCondition) currentCondition.textContent = weather.condition;
+                if (currentHumidity) currentHumidity.textContent = `${weather.humidity}%`;
+                const currentWind = document.querySelector('#currentWind');
+                if (currentWind) currentWind.textContent = `${weather.windSpeed} m/s`;
+                const currentCloudiness = document.querySelector('#currentCloudiness');
+                if (currentCloudiness) currentCloudiness.textContent = `${weather.cloudiness}%`;
+
+                if (forecastList) {
+                    forecastList.innerHTML = weather.forecast.map(item => {
+                        const date = new Date(item.dt * 1000);
+                        return `<li><strong>${date.toDateString().substring(0, 3)}:</strong> ${item.main.temp}°C, ${item.weather[0].description}</li>`;
+                    }).join('');
+                }
+                
+                const sowingDate = new Date(farmerProfile.sowingDate);
+                const today = new Date();
+                const days = Math.floor((today - sowingDate) / (1000 * 60 * 60 * 24));
+                if (daysSinceSowing) daysSinceSowing.textContent = `Days since Sowing: ${days}`;
+                const cropInfo = cropData[farmerProfile.crop.toLowerCase()] || {};
+                const totalDays = cropInfo.growthCycle || 100;
+                const progressPercentage = Math.min((days / totalDays) * 100, 100);
+                if (cropProgressBar) cropProgressBar.style.width = `${progressPercentage}%`;
+                let stage = "Early Growth";
+                if (days >= cropInfo.stages.vegetative) stage = "Vegetative Stage";
+                if (days >= cropInfo.stages.flowering) stage = "Flowering Stage";
+                if (days >= cropInfo.stages.harvest) stage = "Harvest Ready";
+                if (cropStage) cropStage.textContent = `Stage: ${stage}`;
+                const projected = (farmerProfile.area * (cropInfo.baseYield || 1)).toFixed(2);
+                if (projectedYield) projectedYield.textContent = `Projected Yield: ${projected} tons`;
+
+                const alerts = [];
+                if (days >= cropInfo.stages.vegetative && days < cropInfo.stages.flowering) { alerts.push(mockAlerts.vegetative); }
+                if (days >= cropInfo.stages.flowering && days < cropInfo.stages.harvest) { alerts.push(mockAlerts.flowering); }
+                if (alerts.length === 0) { alerts.push({ type: "info", message: "No major alerts. Your farm is in great condition!" }); }
+                if (alertsList) {
+                    alertsList.innerHTML = alerts.map(alert => `<li><span class="alert-tag ${alert.type}">${alert.type.charAt(0).toUpperCase() + alert.type.slice(1)}</span> ${alert.message}</li>`).join('');
+                }
+                if (dailyTip) dailyTip.textContent = cropInfo.tips ? cropInfo.tips[Math.floor(Math.random() * cropInfo.tips.length)] : "No tips available for this crop.";
+
+                const soilData = await fetchSoilData(farmerProfile.location);
+                if (npkLevels) npkLevels.textContent = `N:${soilData.npk[0]} P:${soilData.npk[1]} K:${soilData.npk[2]}`;
+                if (phLevel) phLevel.textContent = soilData.ph;
+                updateSoilChart(soilData.npk);
+
+                const marketData = await fetchMarketData(farmerProfile.crop);
+                if (currentPrice) currentPrice.textContent = `₹${marketData.currentPrice.toFixed(2)}/kg`;
+                updateMarketChart(marketData.trend);
+            }
+            updateDashboard();
+
+            const yieldData = { labels: ['Sowing', 'Vegetative', 'Flowering', 'Harvest'], datasets: [{ label: 'Projected Yield', data: [0.1, 1.2, 2.5, 3.5], borderColor: '#0A6640', backgroundColor: 'rgba(10, 102, 64, 0.2)', tension: 0.4, fill: true }] };
+            const yieldConfig = { type: 'line', data: yieldData, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Yield (tons)' } }, x: { title: { display: true, text: 'Growth Stage' } } } } };
+            const yieldChartElement = document.getElementById('yieldChart');
+            if (yieldChartElement) { new Chart(yieldChartElement, yieldConfig); }
+
+            let soilChart;
+            function updateSoilChart(data) {
+                const soilChartElement = document.getElementById('soilChart');
+                if (!soilChartElement) return;
+                if (soilChart) {
+                    soilChart.destroy();
+                }
+                const soilData = { labels: ['Nitrogen (N)', 'Phosphorus (P)', 'Potassium (K)'], datasets: [{ label: 'NPK Levels', data: data, backgroundColor: ['#FFD700', '#2196F3', '#FF5722'], borderColor: '#fff', hoverOffset: 4 }] };
+                const soilConfig = { type: 'doughnut', data: soilData, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } };
+                soilChart = new Chart(soilChartElement, soilConfig);
+            }
+
+            let marketChart;
+            function updateMarketChart(data) {
+                const marketChartElement = document.getElementById('marketChart');
+                if (!marketChartElement) return;
+                if (marketChart) {
+                    marketChart.destroy();
+                }
+                const marketData = { labels: ['Day -4', 'Day -3', 'Day -2', 'Day -1', 'Today'], datasets: [{ label: 'Market Price (₹/kg)', data: data, borderColor: '#FF5722', tension: 0.4, fill: false }] };
+                const marketConfig = { type: 'line', data: marketData, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Price (₹)' } }, x: { display: false } } } };
+                marketChart = new Chart(marketChartElement, marketConfig);
+            }
+        }
+
+        function initializeAiAssistant() {
+            const chatBox = document.getElementById("chatBox");
+            const textInput = document.getElementById("textInput");
+            const sendBtn = document.getElementById("sendBtn");
+            const voiceBtn = document.getElementById("voiceBtn");
+            const aiStatus = document.getElementById("aiStatus");
+            
+            if (!chatBox || !textInput || !sendBtn) {
+                console.error("AI Assistant elements not found. Skipping initialization.");
+                return;
+            }
+
+            const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
+            const farmerName = farmerProfile ? farmerProfile.name : "Farmer";
+            const farmerCrop = farmerProfile ? farmerProfile.crop : "your crop";
+            const farmerLocation = farmerProfile ? farmerProfile.location : "your location";
+
+            const knowledgeBase = {
+                greetings: [`Hello ${farmerName}! I'm Vera, your personalized farm advisor. How can I help with your ${farmerCrop} farm?`, `Hi ${farmerName}! What's on your mind today?`],
+                rice: {
+                    pest: "For Rice, watch out for the Brown Plant Hopper and Rice Stem Borer. Systemic insecticides are effective. For organic solutions, a Neem oil spray works well.",
+                    disease: "Rice Blast and Sheath Blight are common. Maintain proper plant spacing and consider a preventative fungicide application.",
+                    irrigation: "Paddy fields need to be submerged. Maintain a water depth of 5-10 cm, but be careful of waterlogging, which can cause root damage.",
+                    fertilizer: "Apply NPK fertilizer in a split application. Urea provides nitrogen for healthy leaf growth. Consult your soil health card for precise dosages.",
+                    hack: "A simple hack to check soil moisture is the 'squeeze test.' Squeeze a handful of soil; if it forms a ball but crumbles easily, the moisture is just right."
+                },
+                wheat: {
+                    pest: "Aphids and armyworms are common pests. A balanced insecticide application can control them.",
+                    disease: "Wheat Rust is a major threat. Use disease-resistant varieties if possible and apply a broad-spectrum fungicide early in the season.",
+                    irrigation: "Wheat needs irrigation at critical growth stages: crown root initiation, jointing, and flowering. Over-irrigation can lead to fungal issues.",
+                    fertilizer: "Wheat requires a high amount of nitrogen. Apply DAP and Urea at the time of sowing and during the vegetative stage.",
+                    hack: "To prevent seed-borne diseases, treat your seeds with a fungicide before sowing. It's a simple step that can prevent major losses later on."
+                },
+                maize: {
+                    pest: "Common pests for maize are the Corn Borer and Fall Armyworm. You can use pheromone traps for monitoring or insecticides as needed.",
+                    disease: "Maize is susceptible to Leaf Blight. Proper field sanitation and fungicidal sprays can help.",
+                    irrigation: "Maize is a heavy feeder of water. It needs consistent watering, especially during the silking stage.",
+                    fertilizer: "Apply a good starter fertilizer with phosphorus at planting. Nitrogen is critical during the vegetative and reproductive stages.",
+                    hack: "For weed control, consider inter-row cultivation. This reduces herbicide use and helps aerate the soil."
+                },
+                potatoes: {
+                    pest: "Colorado Potato Beetles are a major threat. Hand-picking or using specific insecticides can manage them.",
+                    disease: "Late Blight is a devastating disease. Use resistant varieties and a preventative fungicide program is highly recommended.",
+                    irrigation: "Potatoes require consistent soil moisture to prevent issues like common scab. Drip irrigation is ideal.",
+                    fertilizer: "Potatoes need balanced NPK. Potassium is especially important for tuber size and quality.",
+                    hack: "Hilling your potato plants regularly helps protect the tubers from sunlight, which prevents them from turning green."
+                },
+                soybeans: {
+                    pest: "Soybean Aphids can cause significant yield loss. Monitor their populations closely.",
+                    disease: "Soybean Cyst Nematode is a major threat. Using resistant varieties is the best long-term strategy.",
+                    irrigation: "Soybeans are drought-tolerant but irrigation during pod-filling can significantly increase yields.",
+                    fertilizer: "Soybeans fix their own nitrogen from the air. A small amount of starter nitrogen is fine, but phosphorus and potassium are more important.",
+                    hack: "Proper seed inoculation with Rhizobium bacteria can boost nitrogen fixation and plant health."
+                },
+                coconut: {
+                    pest: "The Rhinoceros beetle and Red palm weevil are major pests. Pheromone traps and prophylactic treatments can be effective.",
+                    disease: "Root wilt and Bud rot are common diseases. Remove affected palms and maintain good field sanitation.",
+                    irrigation: "Regular watering, especially during summer, is vital for high yield. Basins should be mulched to retain moisture.",
+                    fertilizer: "Coconuts need a balanced fertilizer mix rich in potassium. Apply organic manure annually.",
+                    hack: "Intercropping with crops like pepper or cocoa can provide additional income and create a beneficial ecosystem for the palms."
+                },
+                rubber: {
+                    pest: "Scale insects and mealybugs are common. Use contact insecticides or a neem-based solution.",
+                    disease: "Powdery mildew and abnormal leaf fall are frequent issues. Fungicide sprays during the defoliation and refoliation periods are crucial.",
+                    irrigation: "Rubber trees are generally rainfed, but young plants need regular watering during dry spells.",
+                    fertilizer: "Apply a balanced NPK mixture, particularly during the rainy season. Young trees require more nitrogen for growth.",
+                    hack: "Cover cropping with legumes helps suppress weeds, prevent soil erosion, and enrich the soil with nitrogen."
+                },
+                cardamom: {
+                    pest: "Shoot borer and thrips are the main pests. Integrated pest management, including natural predators, is recommended.",
+                    disease: "A common issue is Katte or mosaic disease. Use disease-free seedlings and rogue out infected plants immediately.",
+                    irrigation: "Cardamom thrives on moisture. Drip irrigation is ideal, and it's essential to irrigate during dry periods to ensure flowering.",
+                    fertilizer: "Apply organic manure and a balanced fertilizer. Cardamom responds well to foliar sprays of micronutrients.",
+                    hack: "Cardamom is an understory crop. Maintaining a light shade by preserving forest trees is key to its growth and productivity."
+                },
+                tea: {
+                    pest: "Tea mosquito bug, termites, and red spider mites are common. Use pest-specific pesticides and maintain clean tea gardens.",
+                    disease: "Blister blight is a major fungal disease. Use resistant clones and apply fungicides during high-humidity periods.",
+                    irrigation: "Tea requires well-distributed rainfall. Drip or sprinkler irrigation is necessary during drought periods to prevent yield loss.",
+                    fertilizer: "Tea requires high nitrogen, so frequent application of urea is common. An acidic soil pH (4.5-5.5) is critical for nutrient uptake.",
+                    hack: "The 'plucking' technique is vital. A good plucker will take only the 'two leaves and a bud' to ensure high-quality tea."
+                },
+                general: {
+                    weather: async () => {
+                        const weather = await fetchWeather(farmerLocation);
+                        return `The current weather in ${farmerLocation} is ${weather.condition} with a temperature of ${weather.temp}°C, a humidity of ${weather.humidity}%, and wind speed of ${weather.windSpeed} m/s. You can also check the 5-day weather forecast on your dashboard.`;
+                    },
+                    soil: "For healthy soil, consider crop rotation and the use of organic matter like compost. It improves soil structure and nutrient retention. You can also view your NPK and pH levels on your dashboard.",
+                    market: async () => {
+                        const market = await fetchMarketData(farmerCrop);
+                        return `The current market price for ${farmerCrop} is ₹${market.currentPrice.toFixed(2)} per kg.`;
+                    },
+                },
+                default: "I'm sorry, I can't find information on that. Could you please rephrase your question or ask about a different farming topic? For example, you can ask about 'pests', 'irrigation', or 'fertilizers' for your crop."
+            };
+
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add(`${sender}-message`);
+                const bubble = document.createElement('div');
+                bubble.classList.add('message-bubble');
+                bubble.innerHTML = `<p>${text}</p>`;
+                if (sender === 'ai') {
+                    const avatar = document.createElement('span');
+                    avatar.classList.add('ai-avatar');
+                    avatar.textContent = '👩‍🌾';
+                    messageDiv.appendChild(avatar);
+                }
+                messageDiv.appendChild(bubble);
+                chatBox.appendChild(messageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('ai-message');
+                typingDiv.innerHTML = `<span class="ai-avatar">👩‍🌾</span><div class="message-bubble typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+                chatBox.appendChild(typingDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                if (aiStatus) {
+                    aiStatus.textContent = "Typing...";
+                    aiStatus.classList.remove('online');
+                    aiStatus.classList.add('typing');
+                }
+                return typingDiv;
+            }
+
+            async function getAiResponse(query) {
+                const lowerQuery = query.toLowerCase();
+                const cropInfo = knowledgeBase[farmerCrop.toLowerCase()];
+                let response = knowledgeBase.default;
+
+                if (lowerQuery.includes('hello') || lowerQuery.includes('hi')) {
+                    response = knowledgeBase.greetings[Math.floor(Math.random() * knowledgeBase.greetings.length)];
+                } else if (lowerQuery.includes('weather') || lowerQuery.includes('forecast') || lowerQuery.includes('rain')) {
+                    response = await knowledgeBase.general.weather();
+                } else if (lowerQuery.includes('market') || lowerQuery.includes('price')) {
+                    response = await knowledgeBase.general.market();
+                } else if (lowerQuery.includes('pest') || lowerQuery.includes('insect') || lowerQuery.includes('bug')) {
+                    response = cropInfo?.pest || knowledgeBase.default;
+                } else if (lowerQuery.includes('disease') || lowerQuery.includes('fungus')) {
+                    response = cropInfo?.disease || knowledgeBase.default;
+                } else if (lowerQuery.includes('irrigation') || lowerQuery.includes('water')) {
+                    response = cropInfo?.irrigation || knowledgeBase.default;
+                } else if (lowerQuery.includes('fertilizer') || lowerQuery.includes('nutrient')) {
+                    response = cropInfo?.fertilizer || knowledgeBase.default;
+                } else if (lowerQuery.includes('hack') || lowerQuery.includes('tip') || lowerQuery.includes('trick')) {
+                    response = cropInfo?.hack || knowledgeBase.default;
+                } else if (lowerQuery.includes('soil') || lowerQuery.includes('ph') || lowerQuery.includes('npk')) {
+                    response = knowledgeBase.general.soil;
+                } else if (lowerQuery.includes('image') || lowerQuery.includes('photo')) {
+                    response = `I can't analyze images just yet, but if you have a photo of a pest or disease, you can use the "Pest & Disease Diagnosis" tool on the Resources page to get a quick answer.`;
+                } else {
+                    response = knowledgeBase.default;
+                }
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 1500 + 1000));
+                return response;
+            }
+
+            async function processQuery(query) {
+                if (!query.trim()) return;
+                addMessage(query, 'user');
+                textInput.value = '';
+                const typingIndicator = showTypingIndicator();
+                const aiResponse = await getAiResponse(query);
+                chatBox.removeChild(typingIndicator);
+                addMessage(aiResponse, 'ai');
+                if (aiStatus) {
+                    aiStatus.textContent = "Online";
+                    aiStatus.classList.remove('typing');
+                    aiStatus.classList.add('online');
+                }
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                voiceBtn.addEventListener('click', () => {
+                    recognition.start();
+                    if (aiStatus) {
+                        aiStatus.textContent = "Listening...";
+                        aiStatus.classList.add('typing');
+                    }
+                    if (voiceBtn) voiceBtn.style.color = '#F44336';
+                });
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    if (textInput) textInput.value = transcript;
+                    processQuery(transcript);
+                };
+                recognition.onend = () => {
+                    if (voiceBtn) voiceBtn.style.color = 'var(--primary-color)';
+                };
+                recognition.onerror = (event) => {
+                    console.error("Speech recognition error:", event.error);
+                    if (aiStatus) {
+                        aiStatus.textContent = "Error";
+                        aiStatus.classList.add('typing');
+                    }
+                };
+            } else {
+                console.warn("Speech Recognition not supported by your browser.");
+                if (voiceBtn) voiceBtn.style.display = 'none';
+            }
+
+            sendBtn.addEventListener('click', () => processQuery(textInput.value));
+            textInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') processQuery(textInput.value);
+            });
+            addMessage(knowledgeBase.greetings[0], 'ai');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            animatedElements.forEach(el => observer.observe(el));
+
+            checkUserSession();
+
+            if (signupBtn) signupBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                onboardingModal.classList.add("active");
+            });
+            if (heroSignupBtn) heroSignupBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                onboardingModal.classList.add("active");
+            });
+            if (loginBtn) loginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.classList.add('active');
+            });
+            
+            if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+            if (logoutBtnApp) logoutBtnApp.addEventListener('click', handleLogout);
+
+            if (onboardingForm) onboardingForm.addEventListener("submit", handleSignUp);
+            if (loginForm) loginForm.addEventListener('submit', handleLogin);
+        });
+    </script>
+</body>
+</html>
