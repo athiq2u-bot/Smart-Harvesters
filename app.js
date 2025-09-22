@@ -129,11 +129,145 @@ async function fetchMarketData(crop) { /* ... Your existing mock data logic ... 
 async function fetchSoilData(location) { /* ... Your existing mock data logic ... */ }
 
 function initializeDashboard() {
-    const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
-    if (!farmerProfile) return;
-    
-    // ... (The rest of your dashboard initialization logic remains here)
-    console.log("Dashboard Initialized for", farmerProfile.name);
+    // Always use demo data if no user profile is present
+    let farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
+    if (!farmerProfile) {
+        farmerProfile = {
+            name: "Demo Farmer",
+            crop: "Rice",
+            location: "Thrissur, Kerala",
+            area: "2.5",
+            sowingDate: "2025-08-01"
+        };
+    }
+
+    const fakeWeather = {
+        temp: '29°C',
+        condition: 'Partly Cloudy',
+        humidity: '68%',
+        wind: '12 km/h SW',
+        rain: '0.8 mm',
+        sunrise: '06:12 AM',
+        sunset: '06:45 PM',
+        forecast: [
+            { day: 'Mon', icon: '☀️', temp: '30°C' },
+            { day: 'Tue', icon: '🌦️', temp: '28°C' },
+            { day: 'Wed', icon: '🌧️', temp: '27°C' },
+            { day: 'Thu', icon: '⛅', temp: '29°C' },
+            { day: 'Fri', icon: '☀️', temp: '31°C' }
+        ],
+        details: {
+            wind: '12 km/h SW',
+            rain: '0.8 mm',
+            sunrise: '06:12 AM',
+            sunset: '06:45 PM',
+            pressure: '1012 hPa',
+            uv: 'High',
+            visibility: '10 km'
+        }
+    };
+    const fakeMarket = {
+        price: '₹2,150/quintal',
+        chart: [2100, 2150, 2120, 2180, 2200, 2150, 2170],
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        trend: '+2.3% this week',
+        lastUpdate: 'Today, 10:30 AM'
+    };
+    const fakeSoil = {
+        npk: 'N: 120, P: 60, K: 80',
+        ph: '6.7',
+        chart: [6.5, 6.6, 6.7, 6.8, 6.7, 6.6, 6.7],
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        moisture: '23%',
+        organic: '2.1%'
+    };
+    const fakeCrop = {
+        daysSinceSowing: 42,
+        stage: 'Flowering',
+        progress: 65,
+        yield: '3.2 tons/acre',
+        yieldInsight: 'Yield is on track for a good harvest.'
+    };
+    const fakeAlerts = [
+        { tag: 'Severe', text: 'Heavy rain expected tomorrow. Take precautions.' },
+        { tag: 'Moderate', text: 'Wind gusts may affect pollination.' },
+        { tag: 'Info', text: 'Market price increased by 2% this week.' },
+        { tag: 'Info', text: 'Soil moisture is optimal for rice.' }
+    ];
+    const fakeTips = [
+        'Mulch your crops to retain soil moisture during hot days.',
+        'Inspect your crops regularly for early signs of pests or disease.',
+        'Irrigate early in the morning to reduce water loss from evaporation.',
+        'Rotate crops each season to improve soil health and reduce pests.',
+        'Test your soil pH every 3 months for optimal nutrient uptake.',
+        'Use organic compost to boost soil fertility naturally.',
+        'Keep farm records to track yield and input costs for better planning.'
+    ];
+    // Show a different tip each day (based on day of week)
+    const today = new Date().getDay();
+    const fakeTip = fakeTips[today % fakeTips.length];
+    // Add extra data to dashboard
+    // Market trend and update
+    const marketTrend = document.getElementById('marketTrend');
+    if (marketTrend) marketTrend.textContent = fakeMarket.trend;
+    const marketUpdate = document.getElementById('marketUpdate');
+    if (marketUpdate) marketUpdate.textContent = fakeMarket.lastUpdate;
+
+    // Soil moisture and organic
+    const soilMoisture = document.getElementById('soilMoisture');
+    if (soilMoisture) soilMoisture.textContent = fakeSoil.moisture;
+    const soilOrganic = document.getElementById('soilOrganic');
+    if (soilOrganic) soilOrganic.textContent = fakeSoil.organic;
+
+    // Weather details (pressure, uv, visibility)
+    const weatherPressure = document.getElementById('weatherPressure');
+    if (weatherPressure) weatherPressure.textContent = fakeWeather.details.pressure;
+    const weatherUV = document.getElementById('weatherUV');
+    if (weatherUV) weatherUV.textContent = fakeWeather.details.uv;
+    const weatherVisibility = document.getElementById('weatherVisibility');
+    if (weatherVisibility) weatherVisibility.textContent = fakeWeather.details.visibility;
+    document.getElementById('phLevel').textContent = fakeSoil.ph;
+    if (window.Chart) {
+        const ctx = document.getElementById('soilChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: fakeSoil.labels,
+                datasets: [{
+                    label: 'Soil pH',
+                    data: fakeSoil.chart,
+                    borderColor: '#0A6640',
+                    fill: false
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+    }
+
+    // Market
+    document.getElementById('currentPrice').textContent = fakeMarket.price;
+    if (window.Chart) {
+        const ctx = document.getElementById('marketChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: fakeMarket.labels,
+                datasets: [{
+                    label: 'Market Price',
+                    data: fakeMarket.chart,
+                    borderColor: '#FFD700',
+                    fill: false
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+    }
+
+    // Farm details (top)
+    const farmDetails = document.getElementById('farmDetails');
+    if (farmDetails) farmDetails.textContent = 'ATHIQ’s Farm (Rice, 2.5 acres)';
+
+    console.log("Dashboard Initialized with fake data");
 }
 
 // --- Functions for AI Assistant ---
