@@ -7,19 +7,23 @@ const signupBtn = document.getElementById("signupBtn");
 const heroSignupBtn = document.getElementById("heroSignupBtn");
 const navLinks = document.querySelector(".nav-links");
 
-// FIX: Corrected variable names to match the actual element IDs in your HTML
-const logoutBtn = document.getElementById("logoutBtn"); 
+const logoutBtn = document.getElementById("logoutBtn");
 const logoutBtnApp = document.getElementById("logoutBtnApp");
 
 const allPages = document.querySelectorAll(".page");
 
 // --- API Keys ---
-const OPENWEATHERMAP_API_KEY = '5a68735515c15c54366e665a388f6a96';
+// These are placeholders. In a real application, they would be loaded securely.
+const OPENWEATHERMAP_API_KEY = '9f373f525f978c4b862cfb0a86993181';
 const MARKET_API_KEY = '5a3f12b7a9f8b4d8122d25d19e9927d6';
 const DIAGNOSIS_API_KEY = '9a13a7c6b90c1f5d2b7c7b8c2d9e1f5d';
 const GEMINI_API_KEY = 'AIzaSyCbdhnXy1JqSlhLTdOVNMb643AmQs4lOaw';
 
 // --- Page Navigation & Modals ---
+/**
+ * Shows a specific page and hides all others.
+ * @param {string} pageId The ID of the page to show.
+ */
 function showPage(pageId) {
     allPages.forEach(page => page.classList.remove('active'));
     
@@ -34,6 +38,10 @@ function showPage(pageId) {
     }
 }
 
+/**
+ * Scrolls to a specific section on the homepage.
+ * @param {string} sectionId The ID of the section to scroll to.
+ */
 function showHomepageSection(sectionId) {
     showPage('homepage');
     const section = document.getElementById(sectionId);
@@ -42,6 +50,10 @@ function showHomepageSection(sectionId) {
     }
 }
 
+/**
+ * Closes a modal.
+ * @param {string} modalId The ID of the modal to close.
+ */
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -75,12 +87,15 @@ function handleLogin(e) {
         'sita': 'securepass'
     };
     
-    if (mockUsers[username] === password) {
+    if (mockUsers[username] && mockUsers[username] === password) {
         localStorage.setItem('isLoggedIn', 'true');
         loginModal.classList.remove('active');
         checkUserSession();
     } else {
-        document.getElementById('loginError').style.display = 'block';
+        const loginError = document.getElementById('loginError');
+        if (loginError) {
+            loginError.style.display = 'block';
+        }
     }
 }
 
@@ -88,18 +103,24 @@ function handleLogout(e) {
     e.preventDefault();
     localStorage.clear();
     checkUserSession();
+    showPage('homepage');
 }
 
+/**
+ * Checks the user's session state and updates the UI accordingly.
+ */
 function checkUserSession() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const hasProfile = localStorage.getItem('smartHarvestersProfile');
 
-    if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'block';
-    if (signupBtn) signupBtn.style.display = isLoggedIn ? 'none' : 'block';
+    // Update buttons visibility
+    loginBtn.style.display = isLoggedIn ? 'none' : 'block';
+    signupBtn.style.display = isLoggedIn ? 'none' : 'block';
     if (heroSignupBtn) heroSignupBtn.style.display = isLoggedIn ? 'none' : 'block';
-    if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
+    logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
     if (logoutBtnApp) logoutBtnApp.style.display = isLoggedIn ? 'block' : 'none';
 
+    // Add or remove Dashboard link
     const existingDashboardLink = navLinks.querySelector('a[onclick*="dashboard-page"]');
     if (isLoggedIn) {
         if (!existingDashboardLink) {
@@ -123,25 +144,9 @@ function checkUserSession() {
     }
 }
 
-// --- Functions for Dashboard Data (mocked for brevity) ---
-async function fetchWeather(location) { /* ... Your existing fetch logic ... */ }
-async function fetchMarketData(crop) { /* ... Your existing mock data logic ... */ }
-async function fetchSoilData(location) { /* ... Your existing mock data logic ... */ }
-
-function initializeDashboard() {
-    // Always use demo data if no user profile is present
-    let farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
-    if (!farmerProfile) {
-        farmerProfile = {
-            name: "Demo Farmer",
-            crop: "Rice",
-            location: "Thrissur, Kerala",
-            area: "2.5",
-            sowingDate: "2025-08-01"
-        };
-    }
-
-    const fakeWeather = {
+// --- Mock Data for Dashboard ---
+const DEMO_DATA = {
+    weather: {
         temp: '29°C',
         condition: 'Partly Cloudy',
         humidity: '68%',
@@ -157,44 +162,40 @@ function initializeDashboard() {
             { day: 'Fri', icon: '☀️', temp: '31°C' }
         ],
         details: {
-            wind: '12 km/h SW',
-            rain: '0.8 mm',
-            sunrise: '06:12 AM',
-            sunset: '06:45 PM',
             pressure: '1012 hPa',
             uv: 'High',
             visibility: '10 km'
         }
-    };
-    const fakeMarket = {
+    },
+    market: {
         price: '₹2,150/quintal',
         chart: [2100, 2150, 2120, 2180, 2200, 2150, 2170],
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         trend: '+2.3% this week',
         lastUpdate: 'Today, 10:30 AM'
-    };
-    const fakeSoil = {
+    },
+    soil: {
         npk: 'N: 120, P: 60, K: 80',
         ph: '6.7',
         chart: [6.5, 6.6, 6.7, 6.8, 6.7, 6.6, 6.7],
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         moisture: '23%',
         organic: '2.1%'
-    };
-    const fakeCrop = {
+    },
+    crop: {
         daysSinceSowing: 42,
         stage: 'Flowering',
         progress: 65,
         yield: '3.2 tons/acre',
         yieldInsight: 'Yield is on track for a good harvest.'
-    };
-    const fakeAlerts = [
+    },
+    alerts: [
         { tag: 'Severe', text: 'Heavy rain expected tomorrow. Take precautions.' },
         { tag: 'Moderate', text: 'Wind gusts may affect pollination.' },
         { tag: 'Info', text: 'Market price increased by 2% this week.' },
         { tag: 'Info', text: 'Soil moisture is optimal for rice.' }
-    ];
-    const fakeTips = [
+    ],
+    tips: [
         'Mulch your crops to retain soil moisture during hot days.',
         'Inspect your crops regularly for early signs of pests or disease.',
         'Irrigate early in the morning to reduce water loss from evaporation.',
@@ -202,72 +203,107 @@ function initializeDashboard() {
         'Test your soil pH every 3 months for optimal nutrient uptake.',
         'Use organic compost to boost soil fertility naturally.',
         'Keep farm records to track yield and input costs for better planning.'
-    ];
-    // Show a different tip each day (based on day of week)
-    const today = new Date().getDay();
-    const fakeTip = fakeTips[today % fakeTips.length];
-    // Add extra data to dashboard
-    // Market trend and update
-    const marketTrend = document.getElementById('marketTrend');
-    if (marketTrend) marketTrend.textContent = fakeMarket.trend;
-    const marketUpdate = document.getElementById('marketUpdate');
-    if (marketUpdate) marketUpdate.textContent = fakeMarket.lastUpdate;
+    ]
+};
 
-    // Soil moisture and organic
-    const soilMoisture = document.getElementById('soilMoisture');
-    if (soilMoisture) soilMoisture.textContent = fakeSoil.moisture;
-    const soilOrganic = document.getElementById('soilOrganic');
-    if (soilOrganic) soilOrganic.textContent = fakeSoil.organic;
+// --- Dashboard Initialization and Data Rendering ---
+async function initializeDashboard() {
+    const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile")) || {
+        name: "Demo Farmer",
+        crop: "Rice",
+        location: "Thrissur, Kerala",
+        area: "2.5",
+        sowingDate: "2025-08-01"
+    };
 
-    // Weather details (pressure, uv, visibility)
-    const weatherPressure = document.getElementById('weatherPressure');
-    if (weatherPressure) weatherPressure.textContent = fakeWeather.details.pressure;
-    const weatherUV = document.getElementById('weatherUV');
-    if (weatherUV) weatherUV.textContent = fakeWeather.details.uv;
-    const weatherVisibility = document.getElementById('weatherVisibility');
-    if (weatherVisibility) weatherVisibility.textContent = fakeWeather.details.visibility;
-    document.getElementById('phLevel').textContent = fakeSoil.ph;
-    if (window.Chart) {
-        const ctx = document.getElementById('soilChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fakeSoil.labels,
-                datasets: [{
-                    label: 'Soil pH',
-                    data: fakeSoil.chart,
-                    borderColor: '#0A6640',
-                    fill: false
-                }]
-            },
-            options: { responsive: true, plugins: { legend: { display: false } } }
-        });
-    }
-
-    // Market
-    document.getElementById('currentPrice').textContent = fakeMarket.price;
-    if (window.Chart) {
-        const ctx = document.getElementById('marketChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fakeMarket.labels,
-                datasets: [{
-                    label: 'Market Price',
-                    data: fakeMarket.chart,
-                    borderColor: '#FFD700',
-                    fill: false
-                }]
-            },
-            options: { responsive: true, plugins: { legend: { display: false } } }
-        });
-    }
-
-    // Farm details (top)
+    // Update farm details
     const farmDetails = document.getElementById('farmDetails');
-    if (farmDetails) farmDetails.textContent = 'ATHIQ’s Farm (Rice, 2.5 acres)';
+    if (farmDetails) {
+        farmDetails.textContent = `${farmerProfile.name}'s Farm (${farmerProfile.crop}, ${farmerProfile.area} acres)`;
+    }
 
-    console.log("Dashboard Initialized with fake data");
+    // Update weather card
+    const weatherData = DEMO_DATA.weather;
+    document.getElementById('currentTemp').textContent = weatherData.temp;
+    document.getElementById('currentCondition').textContent = weatherData.condition;
+    document.getElementById('currentHumidity').textContent = weatherData.humidity;
+    document.getElementById('weatherWind').textContent = weatherData.details.wind;
+    document.getElementById('weatherRain').textContent = weatherData.details.rain;
+    document.getElementById('weatherSunrise').textContent = weatherData.details.sunrise;
+    document.getElementById('weatherSunset').textContent = weatherData.details.sunset;
+    // Update forecast list
+    const forecastList = document.getElementById('forecastList');
+    if (forecastList) {
+        forecastList.innerHTML = weatherData.forecast.map(day => 
+            `<li><span class="emoji">${day.icon}</span> ${day.day}: ${day.temp}</li>`
+        ).join('');
+    }
+
+    // Update crop progress
+    const cropData = DEMO_DATA.crop;
+    document.getElementById('daysSinceSowing').textContent = `Days since Sowing: ${cropData.daysSinceSowing}`;
+    document.getElementById('cropStage').textContent = `Stage: ${cropData.stage}`;
+    const cropProgressBar = document.getElementById('cropProgressBar');
+    if (cropProgressBar) {
+        cropProgressBar.style.width = `${cropData.progress}%`;
+    }
+
+    // Update yield and insights
+    document.getElementById('projectedYield').textContent = `Projected Yield: ${cropData.yield}`;
+    document.getElementById('yieldInsight').textContent = cropData.yieldInsight;
+
+    // Update alerts
+    const alertsList = document.getElementById('alertsList');
+    if (alertsList) {
+        alertsList.innerHTML = DEMO_DATA.alerts.map(alert => 
+            `<li><span class="alert-tag ${alert.tag.toLowerCase()}">${alert.tag}</span> ${alert.text}</li>`
+        ).join('');
+    }
+
+    // Update daily tip
+    const today = new Date().getDay();
+    document.getElementById('dailyTip').textContent = DEMO_DATA.tips[today % DEMO_DATA.tips.length];
+
+    // Update soil health
+    const soilData = DEMO_DATA.soil;
+    document.getElementById('npkLevels').textContent = soilData.npk;
+    document.getElementById('phLevel').textContent = soilData.ph;
+    
+    // Update market prices
+    const marketData = DEMO_DATA.market;
+    document.getElementById('currentPrice').textContent = marketData.price;
+
+    // Initialize charts
+    if (window.Chart) {
+        const yieldCtx = document.getElementById('yieldChart').getContext('2d');
+        new Chart(yieldCtx, {
+            type: 'line', data: {
+                labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                datasets: [{ label: 'Expected Yield (tons)', data: [1.2, 1.5, 1.8, 2.0, 2.1], borderColor: '#0A6640', tension: 0.1 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        const soilCtx = document.getElementById('soilChart').getContext('2d');
+        new Chart(soilCtx, {
+            type: 'bar', data: {
+                labels: ['Nitrogen', 'Phosphorus', 'Potassium'],
+                datasets: [{ label: 'NPK Levels (kg/ha)', data: [120, 80, 150], backgroundColor: ['#2E8B57', '#FFD700', '#2F4F4F'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        const marketCtx = document.getElementById('marketChart').getContext('2d');
+        new Chart(marketCtx, {
+            type: 'line', data: {
+                labels: marketData.labels,
+                datasets: [{ label: 'Market Price (₹/kg)', data: marketData.chart, borderColor: '#2196F3', tension: 0.4 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    console.log("Dashboard Initialized with demo data.");
 }
 
 // --- Functions for AI Assistant ---
@@ -278,19 +314,20 @@ function initializeAiAssistant() {
     const voiceBtn = document.getElementById("voiceBtn");
     const aiStatus = document.getElementById("aiStatus");
     
-    // FIX: Clear chat history every time the assistant is opened
     if (chatBox) chatBox.innerHTML = '';
 
-    if (!chatBox || !textInput || !sendBtn) {
-        console.error("AI Assistant elements not found. Skipping initialization.");
-        return;
-    }
+    const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile")) || {
+        name: "Demo Farmer",
+        crop: "Rice",
+        location: "Thrissur, Kerala"
+    };
+    const { name: farmerName, crop: farmerCrop, location: farmerLocation } = farmerProfile;
 
-    const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
-    const farmerName = farmerProfile ? farmerProfile.name : "Farmer";
-    const farmerCrop = farmerProfile ? farmerProfile.crop : "your crop";
-    const farmerLocation = farmerProfile ? farmerProfile.location : "your location";
-
+    /**
+     * Appends a message to the chat box.
+     * @param {string} text The message text.
+     * @param {'user'|'ai'} sender The sender of the message.
+     */
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add(`${sender}-message`);
@@ -311,7 +348,7 @@ function initializeAiAssistant() {
     function showTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.classList.add('ai-message');
-        typingDiv.id = 'typing-indicator'; // Added ID for easy removal
+        typingDiv.id = 'typing-indicator';
         typingDiv.innerHTML = `<span class="ai-avatar">👩‍🌾</span><div class="message-bubble typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
         chatBox.appendChild(typingDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -334,7 +371,6 @@ function initializeAiAssistant() {
         }
     }
 
-    // FIX: Replaced mock logic with a real Gemini API call
     async function getAiResponse(query) {
         if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
             return "Please add your Gemini API key in the script to enable the AI assistant.";
@@ -348,11 +384,16 @@ function initializeAiAssistant() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
-            if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+            if (!response.ok) {
+                console.error('API response error:', await response.text());
+                throw new Error(`API error: ${response.statusText}`);
+            }
             const data = await response.json();
-            // Basic markdown for bolding text
-            let responseText = data.candidates[0].content.parts[0].text;
-            return responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (responseText) {
+                return responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            }
+            return "I'm sorry, I couldn't generate a response. The API returned an invalid format.";
         } catch (error) {
             console.error("Error fetching AI response:", error);
             return "I'm having trouble connecting right now. Please try again later.";
@@ -373,31 +414,42 @@ function initializeAiAssistant() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
+        recognition.lang = 'en-IN'; // Set language to Indian English
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
         if (voiceBtn) {
             voiceBtn.addEventListener('click', () => {
-                recognition.start();
-                if (aiStatus) {
+                try {
+                    recognition.start();
                     aiStatus.textContent = "Listening...";
+                    aiStatus.classList.remove('online');
                     aiStatus.classList.add('typing');
+                    voiceBtn.style.color = '#F44336';
+                } catch (e) {
+                    console.error("Speech recognition already running or not allowed.", e);
+                    aiStatus.textContent = "Error";
+                    voiceBtn.style.color = 'var(--primary-color)';
                 }
-                voiceBtn.style.color = '#F44336';
             });
         }
+        
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             if (textInput) textInput.value = transcript;
             processQuery(transcript);
         };
+        
         recognition.onend = () => {
-            if (voiceBtn) voiceBtn.style.color = 'var(--primary-color)';
+            voiceBtn.style.color = 'var(--primary-color)';
         };
+        
         recognition.onerror = (event) => {
             console.error("Speech recognition error:", event.error);
-            if (aiStatus) {
-                aiStatus.textContent = "Error";
-                aiStatus.classList.add('typing');
-            }
+            aiStatus.textContent = "Online";
+            aiStatus.classList.remove('typing');
+            aiStatus.classList.add('online');
+            voiceBtn.style.color = 'var(--primary-color)';
         };
     } else {
         console.warn("Speech Recognition not supported by your browser.");
@@ -414,15 +466,21 @@ function initializeAiAssistant() {
 
 // --- Global Event Listeners ---
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (Your IntersectionObserver for animations remains the same)
-
     checkUserSession();
 
-    if (signupBtn) signupBtn.addEventListener('click', (e) => { e.preventDefault(); onboardingModal.classList.add("active"); });
-    if (heroSignupBtn) heroSignupBtn.addEventListener('click', (e) => { e.preventDefault(); onboardingModal.classList.add("active"); });
-    if (loginBtn) loginBtn.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.add("active"); });
+    if (signupBtn) signupBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        onboardingModal.classList.add("active");
+    });
+    if (heroSignupBtn) heroSignupBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        onboardingModal.classList.add("active");
+    });
+    if (loginBtn) loginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginModal.classList.add("active");
+    });
 
-    // FIX: Attached event listeners to the correct logout button variables
     if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
     if (logoutBtnApp) logoutBtnApp.addEventListener('click', handleLogout);
 
