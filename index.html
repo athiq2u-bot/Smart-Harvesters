@@ -25,7 +25,7 @@
         * { box-sizing: border-box; }
         body {
             font-family: 'Poppins', sans-serif;
-            margin: 0;
+            margin: 0;  
             color: var(--text-color);
             background-color: var(--background-color);
             line-height: 1.6;
@@ -262,7 +262,7 @@
                     <a href="#" onclick="showHomepageSection('services')">Services</a>
                     <a href="#" onclick="showPage('crop-library-page')">Crop Library</a>
                     <a href="#" onclick="showPage('resources-page')">Resources</a>
-                        <a href="https://vera-443bcc.zapier.app/" class="animate-link" target="_blank" id="veraAssistantLink">Vera Assistant</a>
+                    <a href="https://vera-443bcc.zapier.app/" class="animate-link" target="_blank" id="veraAssistantLink">Vera Assistant</a>
                 </div>
                 <div class="nav-buttons">
                     <a href="#" class="btn-login" id="loginBtn">Log In</a>
@@ -600,7 +600,7 @@
         const allPages = document.querySelectorAll(".page");
 
         // --- API Keys ---
-        const OPENWEATHERMAP_API_KEY = '5a68735515c15c54366e665a388f6a96';
+        const OPENWEATHERMAP_API_KEY = '9f373f525f978c4b862cfb0a86993181';
         const MARKET_API_KEY = '5a3f12b7a9f8b4d8122d25d19e9927d6';
         const DIAGNOSIS_API_KEY = '9a13a7c6b90c1f5d2b7c7b8c2d9e1f5d';
         const GEMINI_API_KEY = 'AIzaSyCbdhnXy1JqSlhLTdOVNMb643AmQs4lOaw';
@@ -627,7 +627,6 @@
             }
         }
         
-        // ADDED: Function to close any modal
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
@@ -669,6 +668,7 @@
             e.preventDefault();
             localStorage.clear();
             checkUserSession();
+            showPage('homepage'); // Redirect to homepage on logout
         }
 
         function checkUserSession() {
@@ -705,24 +705,136 @@
         }
 
         // --- Dashboard Data Functions (mocked) ---
-        async function fetchWeather(location) { /* ... (Code remains the same) ... */ }
-        async function fetchMarketData(crop) { /* ... (Code remains the same) ... */ }
-        async function fetchSoilData(location) { /* ... (Code remains the same) ... */ }
+        async function fetchWeather(location) { 
+            console.log(`Fetching weather for ${location}...`);
+            // Mock API call
+            return {
+                temperature: '28°C',
+                condition: 'Partly Cloudy',
+                humidity: '75%',
+                wind: '10 km/h NE',
+                rain: '2mm predicted',
+                sunrise: '06:15 AM',
+                sunset: '06:45 PM',
+                forecast: [
+                    { day: 'Wed', temp: '29°C', condition: 'Sunny' },
+                    { day: 'Thu', temp: '27°C', condition: 'Rainy' },
+                    { day: 'Fri', temp: '25°C', condition: 'Cloudy' },
+                    { day: 'Sat', temp: '30°C', condition: 'Sunny' },
+                    { day: 'Sun', temp: '28°C', condition: 'Partly Cloudy' }
+                ]
+            };
+        }
+
+        function updateWeatherCard(data) {
+            document.getElementById('currentTemp').textContent = data.temperature;
+            document.getElementById('currentCondition').textContent = data.condition;
+            document.getElementById('currentHumidity').textContent = data.humidity;
+            document.getElementById('weatherWind').textContent = data.wind;
+            document.getElementById('weatherRain').textContent = data.rain;
+            document.getElementById('weatherSunrise').textContent = data.sunrise;
+            document.getElementById('weatherSunset').textContent = data.sunset;
+
+            const forecastList = document.getElementById('forecastList');
+            forecastList.innerHTML = data.forecast.map(day => 
+                `<li>${day.day}: ${day.temp}, ${day.condition}</li>`
+            ).join('');
+        }
+        
+        // Mock data fetching functions
+        async function fetchMarketData(crop) {
+            console.log(`Fetching market data for ${crop}...`);
+            return {
+                price: '₹25/kg',
+                history: [
+                    { label: 'Jan', value: 20 },
+                    { label: 'Feb', value: 22 },
+                    { label: 'Mar', value: 25 },
+                    { label: 'Apr', value: 24 },
+                    { label: 'May', value: 27 }
+                ]
+            };
+        }
+
+        async function fetchSoilData(location) {
+            console.log(`Fetching soil data for ${location}...`);
+            return {
+                npk: 'N: 120, P: 80, K: 150',
+                ph: '6.5',
+                history: [
+                    { label: 'Jan', value: 6.8 },
+                    { label: 'Feb', value: 6.7 },
+                    { label: 'Mar', value: 6.5 },
+                    { label: 'Apr', value: 6.4 },
+                    { label: 'May', value: 6.5 }
+                ]
+            };
+        }
+        
+        function updateProgress(sowingDate) {
+            const today = new Date();
+            const sowDate = new Date(sowingDate);
+            const days = Math.floor((today - sowDate) / (1000 * 60 * 60 * 24));
+            const totalDays = 120; // Example average crop cycle
+            const progress = Math.min(100, (days / totalDays) * 100);
+
+            document.getElementById('daysSinceSowing').textContent = `Days since Sowing: ${days}`;
+            document.getElementById('cropProgressBar').style.width = `${progress}%`;
+
+            let stage = 'Sowing';
+            if (progress > 20) stage = 'Vegetative Growth';
+            if (progress > 50) stage = 'Flowering';
+            if (progress > 80) stage = 'Harvesting';
+            document.getElementById('cropStage').textContent = `Stage: ${stage}`;
+        }
 
         // --- Dashboard Initialization ---
         function initializeDashboard() {
             const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
             if (!farmerProfile) return;
 
-            const farmDetails = document.getElementById("farmDetails");
-            if (farmDetails) {
-                farmDetails.textContent = `${farmerProfile.name}'s Farm (${farmerProfile.crop}, ${farmerProfile.area} acres)`;
-            }
-            
-            // ... (The rest of the dashboard update logic and chart initializations remain the same)
-            
+            document.getElementById("farmDetails").textContent = `${farmerProfile.name}'s Farm (${farmerProfile.crop}, ${farmerProfile.area} acres)`;
+
             async function updateDashboard() {
-                // All the fetch calls and DOM updates for the dashboard
+                const weatherData = await fetchWeather(farmerProfile.location);
+                updateWeatherCard(weatherData);
+
+                const marketData = await fetchMarketData(farmerProfile.crop);
+                document.getElementById('currentPrice').textContent = marketData.price;
+
+                const soilData = await fetchSoilData(farmerProfile.location);
+                document.getElementById('npkLevels').textContent = soilData.npk;
+                document.getElementById('phLevel').textContent = soilData.ph;
+
+                updateProgress(farmerProfile.sowingDate);
+
+                // Initialize charts
+                new Chart(document.getElementById('yieldChart').getContext('2d'), {
+                    type: 'line', data: {
+                        labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                        datasets: [{ label: 'Expected Yield (tons)', data: [1.2, 1.5, 1.8, 2.0, 2.1], borderColor: '#0A6640', tension: 0.1 }]
+                    }
+                });
+                new Chart(document.getElementById('soilChart').getContext('2d'), {
+                    type: 'bar', data: {
+                        labels: ['Nitrogen', 'Phosphorus', 'Potassium'],
+                        datasets: [{ label: 'NPK Levels (kg/ha)', data: [120, 80, 150], backgroundColor: ['#2E8B57', '#FFD700', '#2F4F4F'] }]
+                    }
+                });
+                new Chart(document.getElementById('marketChart').getContext('2d'), {
+                    type: 'line', data: {
+                        labels: marketData.history.map(d => d.label),
+                        datasets: [{ label: 'Market Price (₹/kg)', data: marketData.history.map(d => d.value), borderColor: '#2196F3', tension: 0.4 }]
+                    }
+                });
+
+                // Mock Alerts
+                const alertsList = document.getElementById('alertsList');
+                alertsList.innerHTML = `
+                    <li><span class="alert-tag severe">URGENT</span> Heavy rainfall warning for the next 24 hours. Ensure proper drainage.</li>
+                    <li><span class="alert-tag moderate">WARNING</span> Possible pest infestation. Inspect your fields for signs of aphids.</li>
+                    <li><span class="alert-tag info">INFO</span> New government subsidy program announced for.${farmerProfile.crop} farmers.</li>
+                `;
             }
             updateDashboard();
         }
@@ -736,7 +848,6 @@
             const voiceBtn = document.getElementById("voiceBtn");
             const aiStatus = document.getElementById("aiStatus");
             
-            // FIX: Clear chat history every time the assistant is opened
             if (chatBox) chatBox.innerHTML = '';
 
             if (!chatBox || !textInput || !sendBtn) {
@@ -754,7 +865,7 @@
                 messageDiv.classList.add(`${sender}-message`);
                 const bubble = document.createElement('div');
                 bubble.classList.add('message-bubble');
-                text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Basic markdown for bolding
+                text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 bubble.innerHTML = `<p>${text}</p>`;
                 if (sender === 'ai') {
                     const avatar = document.createElement('span');
@@ -826,7 +937,50 @@
                 addMessage(aiResponse, 'ai');
             }
 
-            // ... (SpeechRecognition logic remains the same) ...
+            // --- Voice Recognition ---
+            let recognition;
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.lang = 'en-IN';
+                recognition.interimResults = false;
+
+                recognition.onstart = function() {
+                    voiceBtn.style.color = 'red';
+                    textInput.placeholder = 'Listening...';
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    textInput.value = transcript;
+                    processQuery(transcript);
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event);
+                    voiceBtn.style.color = '#58a45c';
+                    textInput.placeholder = 'Ask Vera anything about your farm...';
+                };
+
+                recognition.onend = function() {
+                    voiceBtn.style.color = '#58a45c';
+                    textInput.placeholder = 'Ask Vera anything about your farm...';
+                };
+            }
+
+            if (voiceBtn) {
+                voiceBtn.addEventListener('click', () => {
+                    if (recognition) {
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.warn("Speech recognition is already running. Please wait.");
+                        }
+                    } else {
+                        alert("Voice recognition is not supported in your browser.");
+                    }
+                });
+            }
 
             if (sendBtn) sendBtn.addEventListener('click', () => processQuery(textInput.value));
             if (textInput) textInput.addEventListener('keypress', (e) => {
