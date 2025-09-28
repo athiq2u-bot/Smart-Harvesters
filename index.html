@@ -4,104 +4,274 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Harvesters - Precision Farming Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         /* --- Global Styles & Variables --- */
         :root {
-            --primary-color: #0A6640;
-            --primary-light: #2E8B57;
-            --secondary-color: #2F4F4F;
-            --accent-color: #FFD700;
-            --background-color: #F0F2F5;
+            --primary-color: #0A6640; /* Deep Forest Green */
+            --primary-light: #2E8B57; /* Sea Green */
+            --secondary-color: #2F4F4F; /* Dark Slate Grey (for less important text) */
+            --accent-color: #FFD700; /* Gold (for highlights) */
+            --background-color: #F0F2F5; /* Light Grey Background */
             --card-bg: #FFFFFF;
-            --text-color: #333333;
+            --text-color: #333333; /* Dark Grey for readability */
             --light-text: #666666;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --border-radius: 12px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
+            --border-radius: 16px; 
+            --transition-speed: 0.3s;
         }
-        * { box-sizing: border-box; }
+
+        /* Base Styles & Box Model */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            margin: 0;  
             color: var(--text-color);
             background-color: var(--background-color);
             line-height: 1.6;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        .page { display: none; } /* All pages are hidden by default */
-        .page.active { display: block; } /* Show the active page */
 
-        .btn-onboarding, .btn-login, .btn-logout, .btn-signup {
+        a {
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            cursor: pointer;
+            color: var(--primary-color);
+            transition: color var(--transition-speed) ease;
         }
+
+        a:hover {
+            color: var(--primary-light);
+        }
+
+        /* Accessibility & Focus States */
+        :focus {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* --- Layout Components --- */
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .app-container {
+            width: 95%;
+            max-width: 1280px;
+            margin: 20px auto;
+            padding: 40px;
+            border-radius: 24px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            border: 1px solid #E0E0E0;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 50px;
+            text-align: center;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        /* Modifier for Titles inside the application */
+        .app-container h2 {
+            font-size: 2rem;
+            text-align: left;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* --- Buttons --- */
+        .btn-onboarding, .btn-login, .btn-logout, .btn-signup {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform var(--transition-speed) ease, background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: block; /* Ensure buttons take full width on mobile nav */
+        }
+
         .primary-btn {
             background-color: var(--primary-color);
             color: white;
+            border: none;
         }
-        .primary-btn:hover { background-color: var(--primary-light); transform: translateY(-2px); }
+
+        .primary-btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.25);
+        }
+
         .action-button {
             width: 100%;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 700;
             background-color: var(--primary-color);
             color: white;
-            transition: background-color 0.3s, transform 0.1s;
+            transition: background-color var(--transition-speed), transform 0.1s, box-shadow var(--transition-speed);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
         }
-        .action-button:hover { background-color: var(--primary-light); }
-        .action-button:active { transform: translateY(1px); }
+        .action-button:active {
+            transform: translateY(1px);
+        }
+        .action-button.small-btn {
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            width: auto;
+            align-self: flex-start;
+        }
 
-        /* --- Homepage Specific Styles --- */
+        /* Language Selector Styling */
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .language-selector {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        .language-selector:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* --- Homepage Specifics --- */
         .homepage-header {
-            height: 100vh;
-            background: linear-gradient(135deg, #a4f5b2, #58a45c);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #71C979, var(--primary-color));
             color: white;
             display: flex;
             flex-direction: column;
         }
+
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 25px 5%;
+            background-color: transparent;
+            position: relative;
         }
-        .navbar a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; position: relative; }
+
+        .navbar a {
+            color: white;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 5px;
+            margin-left: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .navbar a:hover {
+            color: var(--accent-color); /* Highlight color on hover */
+            transform: translateY(-2px);
+        }
+
         .navbar a::after {
-            content: ''; position: absolute; left: 0; bottom: -5px; width: 100%; height: 2px;
+            content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px;
             background-color: var(--accent-color); transform: scaleX(0); transition: transform 0.3s ease;
         }
         .navbar a:hover::after { transform: scaleX(1); }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .app-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
         .hero-section {
-            flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-bottom: 10vh;
         }
-        .hero-content h1 { font-size: 4rem; margin: 0; }
-        .hero-content p { font-size: 1.2rem; max-width: 600px; }
-        .section-title { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 50px; text-align: center; }
-        .about-section, .services-section { padding: 80px 5%; }
-        .services-section { background-color: var(--card-bg); }
-        .services-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
-        .service-card {
-            background-color: var(--background-color); padding: 30px; border-radius: 12px; transition: transform 0.3s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;
+
+        .hero-content p {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            max-width: 700px;
+            padding: 0 15px;
+            font-weight: 400;
+            margin: 20px 0 30px 0;
         }
-        .service-card .emoji { font-size: 3rem; margin-bottom: 15px; display: block; }
-        .service-card h3 { color: var(--primary-color); }
-        .service-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         
-        /* --- Modal Styles --- */
+        .about-section, .services-section {
+            padding: 80px 5%;
+        }
+
+        .services-section {
+            background-color: var(--card-bg);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- Modals (Login & Onboarding) --- */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
             display: flex; justify-content: center; align-items: center; z-index: 1000;
@@ -110,142 +280,432 @@
         .modal.active { opacity: 1; visibility: visible; }
         .modal-content {
             background-color: var(--card-bg); padding: 40px; border-radius: 12px; width: 90%; max-width: 450px;
-            text-align: center; box-shadow: var(--shadow); transform: translateY(-20px); transition: transform 0.3s ease;
-            position: relative; /* Added for positioning the close button */
+            text-align: center; box-shadow: var(--shadow); transform: translateY(-20px); opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease;
+            position: relative;
         }
-        .modal.active .modal-content { transform: translateY(0); }
+        .modal.active .modal-content { transform: translateY(0); opacity: 1; }
         .modal-content input {
             width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #DDD;
-            font-size: 1rem; margin-bottom: 15px;
+            font-size: 1rem; margin-bottom: 15px; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); 
+        }
+        .modal-content input:focus { 
+            border-color: var(--primary-light); 
+            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
         }
         .modal-content label { text-align: left; font-size: 0.9rem; font-weight: 500; color: var(--light-text); display: block; margin-bottom: 5px; }
-        .modal-content button { width: 100%; }
-        .modal-close { /* Style for the new close button */
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 2rem;
-            color: var(--light-text);
-            text-decoration: none;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .modal-close:hover {
-            color: var(--text-color);
+        .modal-close { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: var(--light-text); cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: var(--text-color); }
+        
+        /* Custom Message Modal */
+        #messageModal .modal-content {
+            max-width: 350px;
+            padding: 30px;
         }
 
-        .nav-buttons { display: flex; align-items: center; gap: 15px; }
-        .btn-login { color: white; border: 1px solid white; }
-        .btn-login:hover { background-color: rgba(255, 255, 255, 0.2); }
-        .btn-logout { color: white; border: 1px solid white; }
-        .btn-logout:hover { background-color: rgba(255, 255, 255, 0.2); }
 
-        /* --- App Pages --- */
-        .app-container {
-            width: 95%; max-width: 1280px; margin: 20px auto; padding: 30px;
-            border-radius: 20px; background-color: var(--card-bg); box-shadow: var(--shadow);
-        }
+        /* --- App Pages (Dashboard, Library, etc.) --- */
         .app-header {
-            display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
-            border-bottom: 1px solid #E0E0E0; margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #E0E0E0;
+            margin-bottom: 25px;
         }
-        .logo-container { display: flex; align-items: center; }
-        .app-name { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
-        .user-profile { display: flex; align-items: center; font-weight: 500; color: var(--secondary-color); }
-        .dashboard-grid, .crop-grid, .resources-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+        .app-header .app-name {
+            color: var(--primary-color);
         }
-        .card, .crop-card, .resource-card {
-            background-color: var(--background-color); border-radius: var(--border-radius); padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s;
-            display: flex; flex-direction: column;
-        }
-        .card:hover, .crop-card:hover, .resource-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .card-header, .crop-card h3, .resource-card h3 { display: flex; align-items: center; margin-bottom: 15px; }
-        .card-icon { color: var(--primary-color); margin-right: 10px; font-size: 2rem; }
-        .card h3 { margin: 0; font-weight: 600; color: var(--primary-color); font-size: 1.3rem; }
-        .progress-bar-container { width: 100%; height: 15px; background-color: #E0E0E0; border-radius: 8px; overflow: hidden; margin-top: 15px; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, #a4f5b2, var(--primary-light)); width: 0%; transition: width 0.5s ease-in-out; }
-        .alerts-card #alertsList { list-style: none; padding: 0; margin: 0; }
-        .alerts-card #alertsList li {
-            background-color: #fff; border-left: 4px solid var(--accent-color); padding: 12px 15px; margin-bottom: 10px;
-            border-radius: 6px; font-size: 0.95em; color: var(--text-color); display: flex; align-items: flex-start;
-        }
-        .alert-tag { font-weight: 600; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; margin-right: 10px; }
-        .alert-tag.severe { background-color: #FFEBEE; color: #F44336; border: 1px solid #F44336; }
-        .alert-tag.moderate { background-color: #FFFDE7; color: #FFC107; border: 1px solid #FFC107; }
-        .alert-tag.info { background-color: #E3F2FD; color: #2196F3; border: 1px solid #2196F3; }
-        .chart-container { position: relative; height: 300px; }
-        .crop-card .emoji { font-size: 4rem; text-align: center; }
-        .action-button.small-btn { padding: 10px 15px; font-size: 0.9em; width: auto; align-self: flex-start; }
-        .resource-card .emoji { font-size: 3rem; text-align: center; margin-bottom: 15px; }
-
-        /* --- AI Assistant --- */
-        .ai-container { height: 100vh; display: flex; flex-direction: column; background-color: var(--background-color); }
-        .ai-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: var(--card-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .back-btn { text-decoration: none; color: var(--light-text); font-weight: 500; display: flex; align-items: center; }
-        .ai-status { display: flex; align-items: center; }
-        .status { font-size: 0.9em; padding: 4px 10px; border-radius: 15px; font-weight: 500; }
-        .status.online { background-color: #E8F5E9; color: var(--primary-light); }
-        .status.typing { background-color: #FFFDE7; color: #FFC107; }
-        .chat-box { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: #F8F8F8; display: flex; flex-direction: column; }
-        .ai-message, .user-message { display: flex; align-items: flex-end; margin-bottom: 15px; animation: fadeInMessage 0.5s ease-out; }
-        .ai-message { justify-content: flex-start; }
-        .user-message { justify-content: flex-end; }
-        .ai-avatar { font-size: 1.8rem; margin-right: 10px; }
-        .message-bubble { background-color: white; padding: 12px 18px; border-radius: 20px; max-width: 70%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .user-message .message-bubble { background-color: var(--primary-color); color: white; border-bottom-right-radius: 4px; }
-        .ai-message .message-bubble { border-bottom-left-radius: 4px; }
-        .chat-input { display: flex; padding: 10px 20px; border-top: 1px solid #E0E0E0; background-color: var(--card-bg); align-items: center; }
-        .chat-input input { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; margin-right: 10px; font-size: 1rem; }
-        .chat-input button { border: none; background: none; cursor: pointer; color: var(--primary-color); font-size: 2rem; }
-        .voice-btn { color: #58a45c; }
-        .typing-indicator { display: flex; justify-content: center; align-items: center; }
-        .typing-dot { height: 8px; width: 8px; background-color: #CCC; border-radius: 50%; margin: 0 4px; animation: typing-pulse 1.4s infinite ease-in-out; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing-pulse {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        @keyframes fadeInMessage {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: var(--secondary-color);
         }
 
         .home-icon-link {
             text-decoration: none;
             color: var(--primary-color);
             font-size: 2rem;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+        }
+
+        /* --- Universal Card Styles --- */
+        .card, .crop-card, .resource-card, .service-card {
+            background-color: var(--card-bg);
+            border: 1px solid #EAEAEA;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .card:hover, .crop-card:hover, .resource-card:hover, .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-light);
+        }
+        .card:active, .crop-card:active, .resource-card:active, .service-card:active {
+            transform: translateY(0);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .card-icon {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 2.2rem;
+        }
+
+        .card h3, .service-card h3, .crop-card h3, .resource-card h3 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .weather-content p, .progress-content p, .weather-report-details p, .stress-content p {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 4px 0;
+            border-bottom: 1px dashed #E0E0E0;
+            color: var(--secondary-color);
+        }
+        
+        .weather-content p:last-child, .weather-report-details p:last-child, .stress-content p:last-child {
+            border-bottom: none;
+        }
+
+        /* Dashboard specific layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .alerts-card {
+                grid-column: span 2;
+            }
+            .ai-cta-card {
+                grid-column: span 1;
+            }
+        }
+        .forecast-list {
+            list-style: none;
+            padding: 0;
+        }
+        .forecast-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #EEE;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        .forecast-list li:last-child { border-bottom: none; }
+        
+        /* Water Stress Bar Styling */
+        .moisture-bar-container {
+            height: 10px;
+            background-color: #E3F2FD;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+            border: 1px solid #90CAF9;
+        }
+        #moistureBar {
+            height: 100%;
+            width: 0%;
+            background-color: #2196F3;
+            transition: width 0.5s ease;
+        }
+
+
+        /* Diagnosis Page Styling */
+        #diagnosis-page #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+            border: 2px dashed #AAA;
+            object-fit: contain;
+        }
+        .diagnosis-result {
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: var(--background-color);
+            border-left: 5px solid var(--primary-light);
             display: none;
         }
-        .app-header .logo-container .home-icon-link {
-            display: block;
-            margin-right: 10px;
+        .diagnosis-result h4 {
+            color: #D32F2F; 
+            font-weight: 700;
         }
+        .diagnosis-result ul {
+            padding-left: 20px;
+            margin-top: 10px;
+            list-style: disc;
+        }
+        #diagnosisLoading {
+            text-align: center; 
+            font-weight: 600; 
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* --- AI Assistant Page --- */
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .ai-header h2 { color: white; font-size: 2rem; margin-bottom: 0; }
+        .ai-header .back-btn { color: white; opacity: 0.9; display: flex; align-items: center; }
+        .ai-header .back-btn:hover { opacity: 1; }
+
+        .ai-container { min-height: 100vh; display: flex; flex-direction: column; background-color: var(--background-color); }
+        .chat-box { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            background-color: #F8F8F8; 
+            display: flex; 
+            flex-direction: column; 
+            scroll-behavior: smooth;
+        }
+        .ai-message, .user-message { 
+            display: flex; 
+            align-items: flex-start; 
+            margin-bottom: 15px; 
+            animation: fadeInMessage 0.5s ease-out; 
+            max-width: 100%;
+        }
+        .ai-message { justify-content: flex-start; }
+        .user-message { justify-content: flex-end; }
+        .ai-avatar { font-size: 1.8rem; margin-right: 10px; flex-shrink: 0; }
+        
+        .message-bubble { 
+            background-color: white; 
+            padding: 15px 20px; 
+            border-radius: 20px; 
+            max-width: 75%; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: row; /* Changed to row to align text and TTS button */
+            align-items: center;
+            line-height: 1.4;
+        }
+        .message-bubble p { margin: 0; flex-grow: 1; }
+        .user-message .message-bubble { background-color: var(--primary-light); color: white; border-bottom-right-radius: 4px; }
+        .ai-message .message-bubble { border-bottom-left-radius: 4px; }
+        
+        /* TTS Button Styling */
+        .tts-play-btn {
+            background: none;
+            border: none;
+            color: white; /* Default color for button inside primary-light bubble */
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            transition: opacity 0.1s, transform 0.1s, color 0.1s;
+            margin-left: 10px;
+            flex-shrink: 0;
+            min-width: 30px;
+        }
+        .tts-play-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .chat-input { display: flex; padding: 15px 30px; border-top: 1px solid #E0E0E0; background-color: var(--card-bg); align-items: center; }
+        .chat-input input { flex-grow: 1; padding: 12px 20px; border: 1px solid #ddd; border-radius: 20px; margin-right: 10px; font-size: 1rem; outline: none; }
+        .chat-input input:focus { border-color: var(--primary-light); }
+        .chat-input button { border: none; background: none; cursor: pointer; color: var(--primary-color); font-size: 2.5rem; transition: color 0.1s; }
+        .chat-input button:hover { color: var(--primary-light); }
+
+        .ai-status { font-size: 0.9rem; font-weight: 500; padding: 5px 10px; border-radius: 8px; }
+        .ai-status.online { background-color: #C8E6C9; color: var(--primary-color); }
+        .ai-status.typing { background-color: #FFF9C4; color: #FFA000; }
+        .typing-indicator { 
+            width: 40px; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center;
+        }
+        .typing-dot {
+            width: 8px; height: 8px; background-color: #ccc; border-radius: 50%; margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        /* General Animations */
+        .spin-animation {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeInMessage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        /* --- Alerts Styling --- */
+        #alertsList li {
+            list-style: none; 
+            padding: 8px 0; 
+            border-bottom: 1px dashed #EEE; 
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            font-size: 0.95em;
+        }
+        #alertsList li:last-child { border-bottom: none; margin-bottom: 0; }
+        .alert-tag {
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-weight: 600; 
+            font-size: 0.8em; 
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .alert-tag.severe { background-color: #F44336; color: white; }
+        .alert-tag.moderate { background-color: #FFC107; color: #333; }
+        .alert-tag.info { background-color: #2196F3; color: white; }
+
+
+        /* --- Floating AI CTA (NEW) --- */
+        .floating-cta {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 990;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            display: none; /* Hidden by default, shown by JS */
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            border: 3px solid var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .floating-cta:hover {
+            background-color: var(--primary-light);
+            transform: scale(1.05);
+        }
+        .floating-cta .emoji {
+            font-size: 1.8rem;
+        }
+        /* HIDE CTA when on the AI page itself */
+        .page.active#ai-page ~ .floating-cta {
+            display: none !important;
+        }
+
 
         /* --- Media Queries for Mobile Responsiveness --- */
         @media (max-width: 768px) {
-            .navbar { flex-direction: column; text-align: center; }
-            .navbar .nav-links { margin-top: 15px; }
-            .navbar .nav-links a { margin: 0 10px; }
-            .nav-buttons { margin-top: 15px; }
-            .hero-content h1 { font-size: 2.5rem; }
-            .hero-content p { font-size: 1rem; }
-            .section-title { font-size: 2rem; }
-            .services-grid, .dashboard-grid, .crop-grid, .resources-list {
-                grid-template-columns: 1fr;
+            .app-container { padding: 20px; border-radius: 16px; }
+            .section-title { font-size: 2rem; margin-bottom: 30px; }
+            
+            .homepage-header { min-height: 90vh; }
+            .navbar { 
+                flex-direction: column; 
+                text-align: center;
+                padding: 25px 5%; 
             }
-            .app-header { flex-direction: column; text-align: center; }
-            .app-header .user-profile { margin-top: 15px; }
-            .modal-content { padding: 25px; }
-            .ai-header { flex-wrap: wrap; justify-content: center; gap: 10px; }
-            .ai-header h2 { flex-basis: 100%; text-align: center; }
+            .nav-links {
+                margin-top: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                align-items: center;
+            }
+            .navbar a { margin: 5px 0; }
+            .nav-buttons {
+                margin-top: 15px;
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+            .btn-onboarding, .btn-login, .btn-signup {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1rem; padding: 0 20px; }
+            
+            .app-header { flex-direction: column; align-items: flex-start; }
+            .app-header .logo-container { margin-bottom: 10px; }
+            .user-controls { 
+                flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 10px;
+                width: 100%;
+            }
+            .user-profile {
+                flex-basis: 100%; justify-content: space-between; align-items: center;
+            }
+            .user-profile #farmDetails { display: none; }
+            .language-selector { flex-basis: 48%; text-align: center; padding: 8px 5px; }
+
+            .ai-header h2 { display: none; }
+            .ai-header .back-btn { order: 1; }
+            .ai-header .user-controls { order: 2; flex-grow: 1; justify-content: flex-end; }
+            
+            .ai-message .message-bubble, .user-message .message-bubble { max-width: 95%; }
+            .chat-input { padding: 15px 10px; }
             .chat-box { padding: 10px; }
-            .message-bubble { max-width: 85%; }
-            .chat-input { padding: 10px; }
+            
+            .moisture-bar-container { margin-top: 5px; }
+            
+            /* Floating CTA mobile refinement */
+            .floating-cta {
+                bottom: 15px;
+                right: 15px;
+                padding: 12px;
+                font-size: 1rem;
+                gap: 0;
+            }
+            .floating-cta .cta-text {
+                display: none; /* Hide text, only show icon on smaller screens */
+            }
         }
     </style>
 </head>
@@ -258,50 +718,52 @@
                     <span class="app-name">Smart Harvesters</span>
                 </div>
                 <div class="nav-links">
-                    <a href="#" onclick="showHomepageSection('about')">About Us</a>
-                    <a href="#" onclick="showHomepageSection('services')">Services</a>
-                    <a href="#" onclick="showPage('crop-library-page')">Crop Library</a>
-                    <a href="#" onclick="showPage('resources-page')">Resources</a>
-                    <a href="https://vera-443bcc.zapier.app/" class="animate-link" target="_blank" id="veraAssistantLink">Vera Assistant</a>
+                    <!-- Added Dashboard link, hidden by default, shown on login via JS -->
+                    <a href="#" onclick="showPage('dashboard-page')" id="navDashboardLink" style="display:none;" data-en="Dashboard" data-hi="डैशबोर्ड" data-ta="டாஷ்போர்டு" data-ma="ഡാഷ്‌ബോർഡ്">Dashboard</a>
+                    <a href="#about" onclick="showHomepageSection('about')" data-en="About Us" data-hi="हमारे बारे में" data-ta="எங்களைப் பற்றி" data-ma="ഞങ്ങളെക്കുറിച്ച്">About Us</a>
+                    <a href="#services" onclick="showHomepageSection('services')" data-en="Services" data-hi="सेवाएं" data-ta="சேவைகள்" data-ma="സേവനങ്ങൾ">Services</a>
+                    <a href="#" onclick="showPage('crop-library-page')" data-en="Crop Library" data-hi="फसल पुस्तकालय" data-ta="பயிர் நூலகம்" data-ma="വിള ലൈബ്രറി">Crop Library</a>
+                    <a href="#" onclick="showPage('resources-page')" data-en="Resources" data-hi="संसाधन" data-ta="வளங்கள்" data-ma="വിഭവങ്ങൾ">Resources</a>
+                    <a href="#" onclick="showPage('diagnosis-page')" data-en="Diagnosis" data-hi="निदान" data-ta="நோயறிதல்" data-ma="രോഗനിർണയം">Diagnosis</a>
                 </div>
                 <div class="nav-buttons">
-                    <a href="#" class="btn-login" id="loginBtn">Log In</a>
-                    <a href="#" class="btn-onboarding primary-btn" id="signupBtn">Sign Up</a>
-                    <a href="#" id="logoutBtn" class="btn-logout" style="display:none;">Log Out</a>
+                    <a href="#" class="btn-login" id="loginBtn" data-en="Log In" data-hi="लॉग इन" data-ta="உள்நுழைக" data-ma="ലോഗിൻ ചെയ്യുക">Log In</a>
+                    <a href="#" class="btn-onboarding primary-btn" id="signupBtn" data-en="Sign Up" data-hi="साइन अप" data-ta="பதிவு செய்க" data-ma="സൈൻ അപ്പ്">Sign Up</a>
+                    <a href="#" id="logoutBtn" class="btn-logout" style="display:none;" data-en="Log Out" data-hi="लॉग आउट" data-ta="வெளியேறு" data-ma="പുറത്തുകടക്കുക">Log Out</a>
                 </div>
             </nav>
             <div class="hero-section">
                 <div class="hero-content">
-                    <h1 class="animate-text">Farming, Reimagined.</h1>
-                    <p class="animate-text delay-1">Data-driven insights and AI-powered advice to maximize your yield and protect your crops.</p>
-                    <a href="#" class="btn-onboarding primary-btn animate-btn delay-2" id="heroSignupBtn">Sign Up Now</a>
+                    <h1 class="animate-text" data-en="Farming, Reimagined." data-hi="खेती, फिर से कल्पना की गई।" data-ta="விவசாயம், மறுவடிவமைப்பு." data-ma="കൃഷി, പുനരാവിഷ്കരിച്ചത്.">Farming, Reimagined.</h1>
+                    <p class="animate-text delay-1" data-en="Data-driven insights and AI-powered advice to maximize your yield and protect your crops." data-hi="डेटा-संचालित अंतर्दृष्टि और एआई-संचालित सलाह आपकी उपज को अधिकतम करने और अपनी फसलों की रक्षा करने के लिए।" data-ta="உங்கள் மகசூலை அதிகரிக்கவும் பயிர்களைப் பாதுகாக்கவும் தரவு உந்துதல் நுண்ணறிவுகள் மற்றும் AI-இயக்கப்படும் ஆலோசனை." data-ma="നിങ്ങളുടെ വിളവ് വർദ്ധിപ്പിക്കുന്നതിനും വിളകളെ സംരക്ഷിക്കുന്നതിനും ഡാറ്റാധിഷ്ഠിത ഉൾക്കാഴ്ചകളും AI-പവർഡ് ഉപദേശങ്ങളും.">Data-driven insights and AI-powered advice to maximize your yield and protect your crops.</p>
+                    <a href="#" class="btn-onboarding primary-btn animate-btn delay-2" id="heroSignupBtn" data-en="Sign Up Now" data-hi="अभी साइन अप करें" data-ta="இப்போது பதிவு செய்க" data-ma="ഇപ്പോൾ സൈൻ അപ്പ് ചെയ്യുക">Sign Up Now</a>
                 </div>
             </div>
         </header>
         <main id="homepage-sections">
             <section id="about" class="about-section">
                 <div class="about-content">
-                    <h2 class="section-title">Our Mission</h2>
-                    <p class="animate-on-scroll">At Smart Harvesters, we believe in empowering every farmer with technology. We provide a single-window solution that connects you to essential farming data, expert guidance, and a community of like-minded growers. Our goal is to make agriculture smarter, more sustainable, and more profitable for everyone.</p>
+                    <h2 class="section-title" data-en="Our Mission" data-hi="हमारा मिशन" data-ta="எங்கள் நோக்கம்" data-ma="ഞങ്ങളുടെ ദൗത്യം">Our Mission</h2>
+                    <p class="animate-on-scroll" data-en="At Smart Harvesters, we believe in empowering every farmer with technology. We provide a single-window solution that connects you to essential farming data, expert guidance, and a community of like-minded growers. Our goal is to make agriculture smarter, more sustainable, and more profitable for everyone." data-hi="स्मार्ट हार्वेस्टर्स में, हम हर किसान को तकनीक से सशक्त बनाने में विश्वास करते हैं। हम एक ही विंडो समाधान प्रदान करते हैं जो आपको आवश्यक खेती डेटा, विशेषज्ञ मार्गदर्शन और समान विचारधारा वाले उत्पादकों के समुदाय से जोड़ता है। हमारा लक्ष्य कृषि को सभी के लिए स्मार्ट, अधिक टिकाऊ और अधिक लाभदायक बनाना है।" data-ta="ஸ்மார்ட் ஹார்வெஸ்டர்ஸில், ஒவ்வொரு விவசாயியையும் தொழில்நுட்பத்துடன் மேம்படுத்த நாங்கள் நம்புகிறோம். அத்தியாவசிய விவசாயத் தரவு, நிபுணர் வழிகாட்டுதல் மற்றும் ஒத்த எண்ணம் கொண்ட விவசாயிகளின் சமூகத்துடன் உங்களை இணைக்கும் ஒற்றை சாளர தீர்வை நாங்கள் வழங்குகிறோம். அனைவருக்கும் விவசாயத்தை ஸ்மார்ட்டாகவும், நிலையானதாகவும், மேலும் லாபகரமானதாகவும் மாற்றுவதே எங்கள் குறிக்கோள்." data-ma="സ്മാർട്ട് ഹാർവെസ്റ്റേഴ്സിൽ, ഓരോ കർഷകനെയും സാങ്കേതികവിദ്യ ഉപയോഗിച്ച് ശാക്തീകരിക്കുന്നതിൽ ഞങ്ങൾ വിശ്വസിക്കുന്നു. അവശ്യ കൃഷി ഡാറ്റ, വിദഗ്ദ്ധ മാർഗ്ഗനിർദ്ദേശം, സമാന ചിന്താഗതിക്കാരായ കർഷകരുടെ ഒരു കമ്മ്യൂണിറ്റി എന്നിവയിലേക്ക് നിങ്ങളെ ബന്ധിപ്പിക്കുന്ന ഒരു ഒറ്റ-ജാലക പരിഹാരം ഞങ്ങൾ നൽകുന്നു. എല്ലാവർക്കും കൃഷിയെ കൂടുതൽ സമർത്ഥവും, സുസ്ഥിരവും, കൂടുതൽ ലാഭകരവുമാക്കുക എന്നതാണ് ഞങ്ങളുടെ ലക്ഷ്യം.">At Smart Harvesters, we believe in empowering every farmer with technology. We provide a single-window solution that connects you to essential farming data, expert guidance, and a community of like-minded growers. Our goal is to make agriculture smarter, more sustainable, and more profitable for everyone.</p>
                 </div>
             </section>
             <section id="services" class="services-section">
-                <h2 class="section-title">How We Help You Grow</h2>
+                <h2 class="section-title" data-en="How We Help You Grow" data-hi="हम आपको बढ़ने में कैसे मदद करते हैं" data-ta="நீங்கள் வளர நாங்கள் எப்படி உதவுகிறோம்" data-ma="നിങ്ങൾ വളരാൻ ഞങ്ങൾ എങ്ങനെ സഹായിക്കുന്നു">How We Help You Grow</h2>
                 <div class="services-grid">
                     <div class="service-card animate-on-scroll">
                         <span class="emoji">📊</span>
-                        <h3>Data-Driven Analytics</h3>
-                        <p>Get personalized forecasts on yield, market prices, and soil health for your specific crops and region.</p>
+                        <h3 data-en="Data-Driven Analytics" data-hi="डेटा-संचालित विश्लेषण" data-ta="தரவு உந்துதல் பகுப்பாய்வு" data-ma="ഡാറ്റാധിഷ്ഠിത അനലിറ്റിക്സ്">Data-Driven Analytics</h3>
+                        <p data-en="Get personalized forecasts on yield, market prices, and soil health for your specific crops and region." data-hi="अपनी विशिष्ट फसलों और क्षेत्र के लिए उपज, बाजार की कीमतों और मिट्टी के स्वास्थ्य पर व्यक्तिगत पूर्वानुमान प्राप्त करें।" data-ta="உங்கள் குறிப்பிட்ட பயிர்கள் மற்றும் பிராந்தியத்திற்கான மகசூல், சந்தை விலைகள் மற்றும் மண் ஆரோக்கியம் குறித்த தனிப்பயனாக்கப்பட்ட கணிப்புகளைப் பெறுங்கள்." data-ma="നിങ്ങളുടെ നിർദ്ദിഷ്ട വിളകൾക്കും പ്രദേശത്തിനും വിളവ്, വിപണി വില, മണ്ണിന്റെ ആരോഗ്യം എന്നിവയെക്കുറിച്ചുള്ള വ്യക്തിഗത പ്രവചനങ്ങൾ നേടുക.">Get personalized forecasts on yield, market prices, and soil health for your specific crops and region.</p>
                     </div>
                     <div class="service-card animate-on-scroll delay-3">
-                        <span class="emoji">🐛</span>
-                        <h3>Smart Pest & Disease Alerts</h3>
-                        <p>Use our intelligent image recognition tool to instantly diagnose crop issues and get recommended solutions.</p>
+                        <span class="emoji">💧</span>
+                        <h3 data-en="Smart Water Management" data-hi="स्मार्ट जल प्रबंधन" data-ta="ஸ்மார்ட் நீர் மேலாண்மை" data-ma="സ്മാർട്ട് ജല പരിപാലനം">Smart Water Management</h3>
+                        <p data-en="Real-time soil moisture monitoring and smart irrigation scheduling to prevent water stress and optimize usage." data-hi="पानी के तनाव को रोकने और उपयोग को अनुकूलित करने के लिए वास्तविक समय मिट्टी की नमी की निगरानी और स्मार्ट सिंचाई शेड्यूलिंग।" data-ta="நீர் அழுத்தத்தைத் தடுக்கவும், பயன்பாட்டை மேம்படுத்தவும் நிகழ்நேர மண் ஈரப்பதம் கண்காணிப்பு மற்றும் ஸ்மார்ட் நீர்ப்பாசன திட்டமிடல்." data-ma="ജല സമ്മർദ്ദം തടയുന്നതിനും ഉപയോഗം ഒപ്റ്റിമൈസ് ചെയ്യുന്നതിനുമുള്ള തത്സമയ മണ്ണ് ഈർപ്പം നിരീക്ഷണവും സ്മാർട്ട് ജലസേചന ഷെഡ്യൂളിംഗും.">Real-time soil moisture monitoring and smart irrigation scheduling to prevent water stress and optimize usage.</p>
                     </div>
                     <div class="service-card animate-on-scroll delay-4">
                         <span class="emoji">🤖</span>
-                        <h3>Vera AI Advisory</h3>
-                        <p>Our AI assistant, Vera, is available 24/7 to answer your farming questions with expert-level knowledge.</p>
+                        <h3 data-en="Vera AI Advisory" data-hi="वेरा एआई सलाहकार" data-ta="வேரா AI ஆலோசனை" data-ma="വേര AI ഉപദേശം">Vera AI Advisory</h3>
+                        <p data-en="Our AI assistant, Vera, is available 24/7 to answer your farming questions with expert-level knowledge in your language." data-hi="हमारी एआई सहायक, वेरा, विशेषज्ञ-स्तर के ज्ञान के साथ आपके खेती के सवालों का जवाब देने के लिए 24/7 उपलब्ध है।" data-ta="எங்கள் AI உதவியாளர், வேரா, நிபுணர் மட்ட அறிவுடன் உங்கள் விவசாய கேள்விகளுக்கு பதிலளிக்க 24/7 கிடைக்கும்." data-ma="ഞങ്ങളുടെ AI അസിസ്റ്റന്റ്, വേര, വിദഗ്ദ്ധ തലത്തിലുള്ള അറിവോടെ നിങ്ങളുടെ കാർഷിക ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകാൻ 24/7 ലഭ്യമാണ്.">Our AI assistant, Vera, is available 24/7 to answer your farming questions with expert-level knowledge in your language.</p>
                     </div>
                 </div>
             </section>
@@ -318,103 +780,152 @@
                     <span class="emoji">🌱</span>
                     <span class="app-name">Smart Harvesters</span>
                 </div>
-                <div class="user-profile">
-                    <span id="farmDetails"></span>
-                    <a href="#" id="logoutBtnApp" class="btn-logout" style="color: var(--primary-color); border: 1px solid var(--primary-color); padding: 8px 15px; border-radius: 6px; margin-left: 10px;">Log Out</a>
+                <div class="user-controls">
+                    <select id="languageSelectorDashboard" class="language-selector">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="ma">മലയാളം</option>
+                    </select>
+                    <div class="user-profile">
+                        <span id="farmDetails"></span>
+                        <a href="#" id="logoutBtnApp" class="btn-logout" style="color: var(--primary-color); border: 1px solid var(--primary-color); padding: 8px 15px; border-radius: 6px; margin-left: 10px;" data-en="Log Out" data-hi="लॉग आउट" data-ta="வெளியேறு" data-ma="പുറത്തുകടക്കുക">Log Out</a>
+                    </div>
                 </div>
             </header>
             <div class="dashboard-grid">
+                
+                <!-- Weather Card -->
                 <div class="card weather-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">cloud_queue</span>
-                        <h3>Current Weather</h3>
+                        <h3 data-en="Current Weather" data-hi="वर्तमान मौसम" data-ta="தற்போதைய வானிலை" data-ma="നിലവിലെ കാലാവസ്ഥ">Current Weather</h3>
                     </div>
                     <div class="weather-content">
-                        <p>Temperature: <span id="currentTemp">--</span></p>
-                        <p>Condition: <span id="currentCondition">--</span></p>
-                        <p>Humidity: <span id="currentHumidity">--</span></p>
+                        <p data-en-label="Temperature" data-hi-label="तापमान" data-ta-label="வெப்பநிலை" data-ma-label="താപനില">Temperature: <span id="currentTemp">--</span></p>
+                        <p data-en-label="Condition" data-hi-label="स्थिति" data-ta-label="நிலை" data-ma-label="സ്ഥിതി">Condition: <span id="currentCondition">--</span></p>
+                        <p data-en-label="Humidity" data-hi-label="आर्द्रता" data-ta-label="ஈரப்பதம்" data-ma-label="ഈർപ്പം">Humidity: <span id="currentHumidity">--</span></p>
                     </div>
                     <div class="weather-report-details" style="margin-top:10px;">
-                        <h4 style="margin:8px 0 4px 0; color:var(--primary-color); font-size:1.1em;">Weather Report</h4>
-                        <p>Wind: <span id="weatherWind">--</span></p>
-                        <p>Rain: <span id="weatherRain">--</span></p>
-                        <p>Sunrise: <span id="weatherSunrise">--</span></p>
-                        <p>Sunset: <span id="weatherSunset">--</span></p>
+                        <h4 style="margin:8px 0 4px 0; color:var(--primary-color); font-size:1.1em;" data-en="Detailed Report" data-hi="विस्तृत रिपोर्ट" data-ta="விரிவான அறிக்கை" data-ma="വിശദമായ റിപ്പോർട്ട്">Detailed Report</h4>
+                        <p data-en-label="Wind" data-hi-label="हवा" data-ta-label="காற்று" data-ma-label="കാറ്റ്">Wind: <span id="weatherWind">--</span></p>
+                        <p data-en-label="Rain Today" data-hi-label="आज की बारिश" data-ta-label="இன்றைய மழை" data-ma-label="ഇന്നത്തെ മഴ">Rain Today: <span id="weatherRain">--</span></p>
+                        <p data-en-label="Sunrise" data-hi-label="सूर्योदय" data-ta-label="சூரிய உதயம்" data-ma-label="സൂര്യോദയം">Sunrise: <span id="weatherSunrise">--</span></p>
+                        <p data-en-label="Sunset" data-hi-label="सूर्यास्त" data-ta-label="சூரிய அஸ்தமனം" data-ma-label="സൂര്യാസ്തമയം">Sunset: <span id="weatherSunset">--</span></p>
                     </div>
                 </div>
+                
+                <!-- Weather Forecast Card -->
                 <div class="card weather-forecast-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">next_plan</span>
-                        <h3>5-Day Forecast</h3>
+                        <h3 data-en="5-Day Forecast" data-hi="5-दिन का पूर्वानुमान" data-ta="5-நாள் முன்னறிவிப்பு" data-ma="5-ദിവസത്തെ പ്രവചനം">5-Day Forecast</h3>
                     </div>
                     <ul id="forecastList" class="forecast-list"></ul>
                 </div>
+                
+                <!-- Crop Progress Card -->
                 <div class="card progress-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">timeline</span>
-                        <h3>Crop Growth Progress</h3>
+                        <h3 data-en="Crop Growth Progress" data-hi="फसल वृद्धि प्रगति" data-ta="பயிர் வளர்ச்சி முன்னேற்றம்" data-ma="വിള വളർച്ചാ പുരോഗതി">Crop Growth Progress</h3>
                     </div>
                     <div class="progress-content">
-                        <p id="daysSinceSowing">Days since Sowing: --</p>
-                        <p id="cropStage">Stage: --</p>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" id="cropProgressBar"></div>
+                        <p id="daysSinceSowing" data-en-label="Days since Sowing" data-hi-label="बुवाई के बाद के दिन" data-ta-label="விதைத்ததில் இருந்து நாட்கள்" data-ma-label="വിത്ത് വിതച്ച് ദിവസങ്ങൾ">Days since Sowing: <span id="daysValue">--</span></p>
+                        <p id="cropStage" data-en-label="Stage" data-hi-label="चरण" data-ta-label="நிலை" data-ma-label="ഘട്ടം">Stage: <span id="stageValue">--</span></p>
+                        <div class="progress-bar-container" style="
+                            height: 10px; background-color: #e0e0e0; border-radius: 5px; overflow: hidden; margin-top: 15px; border: 1px solid #AAA;
+                        ">
+                            <div id="cropProgressBar" style="
+                                height: 100%; width: 0%; background-color: var(--primary-light); transition: width 0.5s ease;
+                                box-shadow: 0 0 10px rgba(0, 150, 136, 0.5);
+                            "></div>
                         </div>
                     </div>
                 </div>
-                <div class="card yield-card">
+
+                <!-- Water Stress Card -->
+                <div class="card water-stress-card">
                     <div class="card-header">
-                        <span class="material-icons card-icon">assessment</span>
-                        <h3>Yield Forecast</h3>
+                        <span class="material-icons card-icon" style="color:#2196F3;">opacity</span>
+                        <h3 data-en="Water Stress Index" data-hi="जल तनाव सूचकांक" data-ta="நீர் அழுத்தக் குறியீடு" data-ma="ജല സമ്മർദ്ദ സൂചിക">Water Stress Index</h3>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="yieldChart"></canvas>
+                    <div class="stress-content">
+                        <p data-en-label="Soil Moisture" data-hi-label="मिट्टी की नमी" data-ta-label="மண் ஈரப்பதம்" data-ma-label="മണ്ണ് ഈർപ്പം">Soil Moisture: <span id="soilMoisture">--</span></p>
+                        <p data-en-label="Stress Level" data-hi-label="तनाव स्तर" data-ta-label="அழுத்த நிலை" data-ma-label="ക്ഷാമ നില">Stress Level: <span id="waterStressLevel" data-stress-key="Optimal">--</span></p>
+                        <div class="moisture-bar-container">
+                            <div id="moistureBar"></div>
+                        </div>
                     </div>
-                    <p id="projectedYield" class="text-center">Projected Yield: --</p>
-                    <p id="yieldInsight" class="text-center">Yield data is being analyzed for this crop.</p>
+                    <p id="irrigationAdvice" style="margin-top: 15px; padding: 10px; background-color: #E3F2FD; border-radius: 6px; font-style: italic; font-size: 0.9em; border-left: 3px solid #2196F3;" data-en="Water data is being analyzed." data-hi="जल डेटा का विश्लेषण किया जा रहा है।" data-ta="நீர் தரவு பகுப்பாய்வு செய்யப்படுகிறது." data-ma="ജല ഡാറ്റ വിശകലനം ചെയ്യുന്നു.">Water data is being analyzed.</p>
                 </div>
+                
+                <!-- Daily Tip Card (NEW) -->
+                <div class="card daily-tip-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">lightbulb</span>
+                        <h3 data-en="Daily Farming Tip" data-hi="दैनिक कृषि टिप" data-ta="தினசரி விவசாய உதவிக்குறிப்பு" data-ma="പ്രതിദിന കാർഷിക നുറുങ്ങ്">Daily Farming Tip</h3>
+                    </div>
+                    <p id="dailyTip" style="font-style: italic; font-weight: 500; font-size: 1.1em; color: var(--text-color);">A daily tip to improve your farming efficiency.</p>
+                </div>
+
+                <!-- Alerts Card -->
                 <div class="card alerts-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">notifications_active</span>
-                        <h3>Alerts & Advisories</h3>
+                        <h3 data-en="Alerts & Advisories" data-hi="अलर्ट और सलाह" data-ta="விழிப்பூட்டல்கள் மற்றும் ஆலோசனைகள்" data-ma="മുന്നറിയിപ്പുകളും ഉപദേശങ്ങളും">Alerts & Advisories</h3>
                     </div>
-                    <ul id="alertsList"></ul>
+                    <ul id="alertsList">
+                        <!-- Alerts will be dynamically added here -->
+                    </ul>
                 </div>
-                <div class="card tip-card">
-                    <div class="card-header">
-                        <span class="material-icons card-icon">lightbulb_outline</span>
-                        <h3>Daily Tip</h3>
-                    </div>
-                    <p id="dailyTip">No tips available yet. Check back tomorrow!</p>
-                </div>
+                
+                <!-- Soil Health Card -->
                 <div class="card soil-health-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">spa</span>
-                        <h3>Soil Health</h3>
+                        <h3 data-en="Soil Health" data-hi="मिट्टी का स्वास्थ्य" data-ta="மண் ஆரோக்கியம்" data-ma="മണ്ണിന്റെ ആരോഗ്യം">Soil Health</h3>
                     </div>
-                    <p>NPK Levels: <span id="npkLevels">--</span></p>
-                    <p>pH Level: <span id="phLevel">--</span></p>
-                    <div class="chart-container">
+                    <p data-en-label="NPK Levels" data-hi-label="एनपीके स्तर" data-ta-label="NPK நிலைகள்" data-ma-label="NPK അളവുകൾ">NPK Levels: <span id="npkLevels">--</span></p>
+                    <p data-en-label="pH Level" data-hi-label="पीएच स्तर" data-ta-label="pH நிலை" data-ma-label="pH അളവ്">pH Level: <span id="phLevel">--</span></p>
+                    <div class="chart-container" style="height: 150px; margin-top: 15px;">
                         <canvas id="soilChart"></canvas>
                     </div>
                 </div>
+
+                <!-- Market Card -->
                 <div class="card market-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">trending_up</span>
-                        <h3>Market Prices</h3>
+                        <h3 data-en="Market Prices" data-hi="बाजार मूल्य" data-ta="சந்தை விலைகள்" data-ma="വിപണി വിലകൾ">Market Prices</h3>
                     </div>
-                    <p>Current Price: <span id="currentPrice">--</span></p>
-                    <div class="chart-container">
+                    <p data-en-label="Current Price" data-hi-label="वर्तमान मूल्य" data-ta-label="தற்போதைய விலை" data-ma-label="നിലവിലെ വില">Current Price: <span id="currentPrice">--</span></p>
+                    <div class="chart-container" style="height: 150px; margin-top: 15px;">
                         <canvas id="marketChart"></canvas>
                     </div>
+                    <p id="sellAdvice" data-advice-key="1" style="margin-top: 15px; padding: 10px; background-color: #E8F5E9; border-radius: 6px; font-weight: 600; font-size: 0.95em; border-left: 3px solid var(--primary-light);">Best time to sell: Sell now for best margin</p>
                 </div>
+                
+                <!-- Yield Card -->
+                <div class="card yield-card">
+                    <div class="card-header">
+                        <span class="material-icons card-icon">assessment</span>
+                        <h3 data-en="Yield Forecast" data-hi="उपज का पूर्वानुमान" data-ta="மகசூல் கணிப்பு" data-ma="വിളവ് പ്രവചനം">Yield Forecast</h3>
+                    </div>
+                    <div class="chart-container" style="height: 150px;">
+                        <canvas id="yieldChart"></canvas>
+                    </div>
+                    <p id="projectedYield" class="text-center" data-en-label="Projected Yield" data-hi-label="अनुमानित उपज" data-ta-label="கணிக்கப்பட்ட மகசூல்" data-ma="പ്രവചിക്കപ്പെട്ട വിളവ്">Projected Yield: <span id="yieldValue">--</span></p>
+                </div>
+
+                <!-- AI CTA Card -->
                 <div class="card ai-cta-card">
                     <div class="card-header">
                         <span class="material-icons card-icon">smart_toy</span>
-                        <h3>Vera Assistant</h3>
+                        <h3 data-en="Vera Assistant" data-hi="वेरा सहायक" data-ta="வேரா உதவியாளர்" data-ma="വേര അസിസ്റ്റന്റ്">Vera Assistant</h3>
                     </div>
-                    <p>Need expert advice? Chat with your AI partner for instant solutions.</p>
-                    <a href="https://vera-443bcc.zapier.app/" target="_blank" class="action-button">Launch Vera</a>
+                    <p data-en="Need expert advice? Chat with your AI partner for instant solutions." data-hi="विशेषज्ञ सलाह चाहिए? त्वरित समाधान के लिए अपने एआई पार्टनर से चैट करें।" data-ta="நிபுணர் ஆலோசனை வேண்டுமா? உடனடி தீர்வுகளுக்கு உங்கள் AI துணையுடன் அரட்டையடிக்கவும்." data-ma="വിദഗ്ദ്ധോപദേശം ആവശ്യമുണ്ടോ? തൽക്ഷണ പരിഹാരങ്ങൾക്കായി നിങ്ങളുടെ AI പങ്കാളിയുമായി ചാറ്റ് ചെയ്യുക.">Need expert advice? Chat with your AI partner for instant solutions.</p>
+                    <a href="#" onclick="showPage('ai-page')" class="action-button" data-en="Launch Vera" data-hi="वेरा लॉन्च करें" data-ta="வேராவை தொடங்கு" data-ma="വേരയെ സമാരംഭിക്കുക">Launch Vera</a>
                 </div>
             </div>
         </div>
@@ -424,11 +935,19 @@
         <div class="ai-container">
             <header class="ai-header">
                 <a href="#" onclick="showPage('dashboard-page')" class="back-btn">
-                    <span class="material-icons">arrow_back</span> Back to Dashboard
+                    <span class="material-icons">arrow_back</span> <span data-en="Back to Dashboard" data-hi="डैशबोर्ड पर वापस" data-ta="டாஷ்போர்டுக்குத் திரும்பு" data-ma="ഡാഷ്‌ബോർഡിലേക്ക് മടങ്ങുക">Back to Dashboard</span>
                 </a>
-                <h2>Vera</h2>
-                <div class="ai-status">
-                    <span id="aiStatus" class="status online">Online</span>
+                <h2>Vera AI Advisor</h2>
+                <div class="user-controls">
+                    <select id="languageSelectorAi" class="language-selector">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="ma">മലയാളം</option>
+                    </select>
+                    <div class="ai-status">
+                        <span id="aiStatus" class="status online">Online</span>
+                    </div>
                 </div>
             </header>
             <div id="chatBox" class="chat-box"></div>
@@ -440,6 +959,49 @@
         </div>
     </div>
 
+    <div id="diagnosis-page" class="page">
+        <div class="app-container">
+            <header class="app-header">
+                <div class="logo-container">
+                    <a href="#" onclick="showPage('dashboard-page')" class="home-icon-link">
+                        <span class="material-icons">arrow_back</span>
+                    </a>
+                    <span class="emoji">🌱</span>
+                    <span class="app-name">Smart Harvesters</span>
+                </div>
+                <h2 data-en="Instant Crop Diagnosis" data-hi="त्वरित फसल निदान" data-ta="உடனடி பயிர் நோயறிதல்" data-ma="തൽക്ഷണ വിള രോഗനിർണയം">Instant Crop Diagnosis</h2>
+            </header>
+            <section>
+                <p data-en="Upload an image of your affected crop leaf or stem below for instant diagnosis and recommended treatment plan from our AI model." data-hi="त्वरित निदान और अनुशंसित उपचार योजना के लिए अपनी प्रभावित फसल पत्ती या तने की एक छवि नीचे अपलोड करें।" data-ta="உடனடி நோயறிதல் மற்றும் பரிந்துரைக்கப்பட்ட சிகிச்சை திட்டத்திற்காக உங்கள் பாதிக்கப்பட்ட பயிர் இலை அல்லது தண்டின் படத்தை கீழே பதிவேற்றவும்." data-ma="തൽക്ഷണ വിള രോഗനിർണയത്തിനും ശുപാർശിത ചികിത്സാ പദ്ധതിക്കുമായി നിങ്ങളുടെ ബാധിച്ച വിളയുടെ ഇലയുടെയോ തണ്ടിന്റെയോ ചിത്രം താഴെ அப்‌ലോഡ് ചെയ്യുക.">Upload an image of your affected crop leaf or stem below for instant diagnosis and recommended treatment plan from our AI model.</p>
+                <input type="file" id="fileInputDiagnosis" accept="image/*" style="margin: 20px 0; display: block;">
+                
+                <p id="diagnosisPlaceholder" style="text-align:center; color: var(--light-text); border: 2px dashed #DDD; padding: 40px; border-radius: 10px;">
+                    <span class="material-icons" style="font-size: 3rem; display: block; margin-bottom: 10px;">image</span>
+                    <span data-en="Upload an image to start the analysis." data-hi="विश्लेषण शुरू करने के लिए एक छवि अपलोड करें।" data-ta="பகுப்பாய்வைத் தொடங்க ஒரு படத்தைப் பதிவேற்றவும்." data-ma="വിശകലനം ആരംഭിക്കാൻ ഒരു ചിത്രം அப்‌ലോഡ് ചെയ്യുക.">Upload an image to start the analysis.</span>
+                </p>
+
+                <img id="imagePreview" src="" alt="Crop image preview" style="display: none;">
+                
+                <p id="diagnosisLoading">
+                    <span class="material-icons spin-animation" style="vertical-align: middle;">sync</span> 
+                    <span data-en="Analyzing image. Please wait..." data-hi="छवि का विश्लेषण किया जा रहा है। कृपया प्रतीक्षा करें..." data-ta="படம் பகுப்பாய்வு செய்யப்படுகிறது. தயவுசெய்து காத்திருக்கவும்..." data-ma="ചിത്രം വിശകലനം ചെയ്യുന്നു. ദയവായി കാത്തിരിക്കുക...">Analyzing image. Please wait...</span>
+                </p>
+                
+                <div id="diagnosisResult" class="diagnosis-result">
+                    <h4 id="resultTitle">Diagnosis Result</h4>
+                    <p id="resultSummary" style="font-style: italic; margin-top: 5px; color: var(--light-text);"></p>
+                    
+                    <h4 style="color:var(--primary-color); margin-top: 20px;" data-en="Recommended Treatment" data-hi="अनुशंसित उपचार" data-ta="பரிந்துரைக்கப்பட்ட சிகிச்சை" data-ma="ശുപാർശിത ചികിത്സ">Recommended Treatment:</h4>
+                    <ul id="treatmentList" style="font-weight: 500; color: #00796B;">
+                        <!-- Treatments will be dynamically added here -->
+                    </ul>
+                    <a href="#" onclick="showPage('ai-page')" class="action-button small-btn" style="margin-top: 20px; width: 100%;" data-en="Ask Vera for more details" data-hi="वेरा से अधिक विवरण पूछें" data-ta="மேலும் விவரங்களை வேராவிடம் கேட்கவும்" data-ma="കൂടുതൽ വിവരങ്ങൾ വേരയോട് ചോദിക്കുക">Ask Vera for more details</a>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Crop Library Page: Now an empty container for JS population -->
     <div id="crop-library-page" class="page">
         <div class="app-container">
             <header class="app-header">
@@ -450,61 +1012,15 @@
                     <span class="emoji">🌱</span>
                     <span class="app-name">Smart Harvesters</span>
                 </div>
-                <h2>Crop Library</h2>
+                <h2 data-en="Crop Library" data-hi="फसल पुस्तकालय" data-ta="பயிர் நூலகம்" data-ma="വിള ലൈബ്രറി">Crop Library</h2>
             </header>
             <section class="crop-grid">
-                <div class="crop-card">
-                    <div class="emoji">🌾</div>
-                    <h3>Rice</h3>
-                    <p>A staple crop. Learn about cultivation, pests, and harvest cycles for rice.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🌽</div>
-                    <h3>Maize</h3>
-                    <p>A comprehensive guide to growing healthy maize crops.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🥔</div>
-                    <h3>Potatoes</h3>
-                    <p>Tips for planting, managing, and harvesting potatoes.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🌱</div>
-                    <h3>Soybeans</h3>
-                    <p>An in-depth guide to growing protein-rich soybeans.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🥥</div>
-                    <h3>Coconut</h3>
-                    <p>Kerala's iconic crop. Tips on palm management, pests, and yield optimization.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🌳</div>
-                    <h3>Rubber</h3>
-                    <p>Information on tapping techniques, disease control, and soil management for rubber plantations.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🌶️</div>
-                    <h3>Cardamom</h3>
-                    <p>A high-value spice crop. Learn about shade management and irrigation for optimal growth.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
-                <div class="crop-card">
-                    <div class="emoji">🍵</div>
-                    <h3>Tea</h3>
-                    <p>Tips for pruning, plucking, and maintaining soil pH for robust tea gardens.</p>
-                    <a href="#" class="action-button small-btn">View Details</a>
-                </div>
+                <!-- Content generated dynamically by initializeCropLibrary() -->
             </section>
         </div>
     </div>
-
+    
+    <!-- Resources Page: Now an empty container for JS population -->
     <div id="resources-page" class="page">
         <div class="app-container">
             <header class="app-header">
@@ -515,39 +1031,10 @@
                     <span class="emoji">🌱</span>
                     <span class="app-name">Smart Harvesters</span>
                 </div>
-                <h2>Resources</h2>
+                <h2 data-en="Resources" data-hi="संसाधन" data-ta="வளங்கள்" data-ma="വിഭവങ്ങൾ">Resources</h2>
             </header>
             <section class="resources-list">
-                <div class="resource-card">
-                    <div class="emoji">💰</div>
-                    <h3>Government Subsidies</h3>
-                    <p>Information on farming subsidies and financial aid programs.</p>
-                    <a href="#" class="action-button small-btn">Learn More</a>
-                </div>
-                <div class="resource-card">
-                    <div class="emoji">🧪</div>
-                    <h3>Soil Testing Labs</h3>
-                    <p>Find accredited soil testing laboratories near you.</p>
-                    <a href="#" class="action-button small-btn">Find a Lab</a>
-                </div>
-                <div class="resource-card">
-                    <div class="emoji">📈</div>
-                    <h3>Market Price Data</h3>
-                    <p>Get real-time updates on commodity market prices.</p>
-                    <a href="#" class="action-button small-btn">View Prices</a>
-                </div>
-                <div class="resource-card">
-                    <div class="emoji">💬</div>
-                    <h3>Community Forum</h3>
-                    <p>Connect with other farmers to share tips and ask questions.</p>
-                    <a href="#" class="action-button small-btn">Join Community</a>
-                </div>
-                <div class="resource-card">
-                    <div class="emoji">📸</div>
-                    <h3>Pest & Disease Diagnosis</h3>
-                    <p>Upload a photo of your crop to get an instant diagnosis.</p>
-                    <a href="#" class="action-button small-btn">Diagnose Now</a>
-                </div>
+                <!-- Content generated dynamically by initializeResources() -->
             </section>
         </div>
     </div>
@@ -556,16 +1043,16 @@
         <div class="modal-content">
             <a href="#" class="modal-close" onclick="closeModal('onboardingModal')">&times;</a>
             <span class="emoji" style="font-size: 4rem;">🌱</span>
-            <h2>Welcome to Smart Harvesters!</h2>
-            <p>Let's personalize your dashboard.</p>
+            <h2 data-en="Welcome to Smart Harvesters!" data-hi="स्मार्ट हार्वेस्टर्स में आपका स्वागत है!" data-ta="ஸ்மார்ட் ஹார்வெஸ்டர்ஸுக்கு வரவேற்கிறோம்!" data-ma="സ്മാർട്ട് ഹാർവെസ്റ്റേഴ്സിലേക്ക് സ്വാഗതം!">Welcome to Smart Harvesters!</h2>
+            <p data-en="Let's personalize your dashboard." data-hi="आइए आपके डैशबोर्ड को वैयक्तिकृत करें।" data-ta="உங்கள் டாஷ்போர்டை தனிப்பயனாக்குவோம்." data-ma="നിങ്ങളുടെ ഡാഷ്‌ബോർഡ് വ്യക്തിഗതമാക്കാം.">Let's personalize your dashboard.</p>
             <form id="onboardingForm">
                 <input type="text" id="farmerName" placeholder="Your Name" required>
                 <input type="text" id="farmerCrop" placeholder="Your Main Crop (e.g., Rice, Wheat)" required>
                 <input type="text" id="farmerLocation" placeholder="Your Location (e.g., Chennai, India)" required>
                 <input type="number" id="farmerArea" placeholder="Field Area (in acres)" required min="1">
-                <label for="sowingDate">Sowing Date:</label>
+                <label for="sowingDate" data-en="Sowing Date:" data-hi="बुवाई की तारीख:" data-ta="விதைக்கும் தேதி:" data-ma="വിത്ത് വിതച്ച തീയതി:">Sowing Date:</label>
                 <input type="date" id="sowingDate" required>
-                <button type="submit" class="action-button">Go to Dashboard</button>
+                <button type="submit" class="action-button" data-en="Go to Dashboard" data-hi="डैशबोर्ड पर जाएं" data-ta=" டாஷ்போர்டுக்குச் செல்லவும்" data-ma="ഡാഷ്‌ബോർഡിലേക്ക് പോകുക">Go to Dashboard</button>
             </form>
         </div>
     </div>
@@ -574,436 +1061,1082 @@
         <div class="modal-content">
             <a href="#" class="modal-close" onclick="closeModal('loginModal')">&times;</a>
             <span class="emoji" style="font-size: 4rem;">🔑</span>
-            <h2>Welcome Back!</h2>
-            <p>Enter your details to access your farm dashboard.</p>
-            <p id="loginError" style="color: #F44336; font-size: 0.9em; display: none;">Invalid username or password.</p>
+            <h2 data-en="Welcome Back!" data-hi="वापसी पर आपका स्वागत है!" data-ta="மீண்டும் வருக!" data-ma="തിരികെ സ്വാഗതം!">Welcome Back!</h2>
+            <p data-en="Enter your details to access your farm dashboard." data-hi="अपने फार्म डैशबोर्ड तक पहुंचने के लिए अपना विवरण दर्ज करें।" data-ta="உங்கள் பண்ணை டாஷ்போர்டை அணுக உங்கள் விவரங்களை உள்ளிடவும்." data-ma="നിങ്ങളുടെ ഫാം ഡാഷ്‌ബോർഡ് ആക്‌സസ് ചെയ്യാൻ നിങ്ങളുടെ വിശദാംശങ്ങൾ നൽകുക.">Enter your details to access your farm dashboard.</p>
+            <p id="loginError" style="color: #F44336; font-size: 0.9em; display: none;" data-en="Invalid username or password." data-hi="अमान्य उपयोगकर्ता नाम या पासवर्ड।" data-ta="தவறான பயனர்பெயர் அல்லது கடவுச்சொல்." data-ma="തെറ്റായ ഉപയോക്തൃനാമം അല്ലെങ്കിൽ പാസ്‌വേർഡ്.">Invalid username or password.</p>
             <form id="loginForm">
-                <input type="text" id="loginUsername" placeholder="Username" required>
-                <input type="password" id="loginPassword" placeholder="Password" required>
-                <button type="submit" class="action-button">Log In</button>
+                <input type="text" id="loginUsername" placeholder="Username (try 'farmer')" required>
+                <input type="password" id="loginPassword" placeholder="Password (try 'pass')" required>
+                <button type="submit" class="action-button" data-en="Log In" data-hi="लॉग इन करें" data-ta="உள்நுழைக" data-ma="ലോഗിൻ ചെയ്യുക">Log In</button>
             </form>
         </div>
     </div>
     
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <a href="#" class="modal-close" onclick="closeModal('messageModal')">&times;</a>
+            <span class="material-icons" id="messageIcon" style="font-size: 3rem; color: #FFC107;">warning</span>
+            <h2 id="messageTitle" style="color: var(--text-color);">Attention!</h2>
+            <p id="messageBody">This is a placeholder message.</p>
+            <button class="action-button" onclick="closeModal('messageModal')" style="margin-top: 20px;">Close</button>
+        </div>
+    </div>
+    
+    <!-- Floating AI Assistant CTA (NEW ELEMENT) -->
+    <a href="#" id="floatingAiCta" class="floating-cta" onclick="showPage('ai-page')">
+        <span class="emoji">👩‍🌾</span>
+        <span class="cta-text" data-en="Chat with Vera" data-hi="वेरा से बात करें" data-ta="வேராவுடன் அரட்டையடிக்கவும்" data-ma="വേരയോട് ചാറ്റ് ചെയ്യുക">Chat with Vera</span>
+    </a>
+
     <script>
-        const onboardingModal = document.getElementById("onboardingModal");
-        const onboardingForm = document.getElementById("onboardingForm");
-        const loginModal = document.getElementById("loginModal");
-        const loginForm = document.getElementById("loginForm");
-        const loginBtn = document.getElementById("loginBtn");
-        const signupBtn = document.getElementById("signupBtn");
-        const logoutBtn = document.getElementById("logoutBtn");
-        const logoutBtnApp = document.getElementById("logoutBtnApp");
-        const heroSignupBtn = document.getElementById("heroSignupBtn");
-        const navLinks = document.querySelector(".nav-links");
+// --- UI Element References ---
+const onboardingModal = document.getElementById("onboardingModal");
+const onboardingForm = document.getElementById("onboardingForm");
+const loginModal = document.getElementById("loginModal");
+const loginForm = document.getElementById("loginForm");
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const heroSignupBtn = document.getElementById("heroSignupBtn");
+const navLinks = document.querySelector(".nav-links");
+const navDashboardLink = document.getElementById("navDashboardLink");
 
-        const allPages = document.querySelectorAll(".page");
+const logoutBtn = document.getElementById("logoutBtn");
+const logoutBtnApp = document.getElementById("logoutBtnApp");
 
-        // --- API Keys ---
-        const OPENWEATHERMAP_API_KEY = '9f373f525f978c4b862cfb0a86993181';
-        const MARKET_API_KEY = '5a3f12b7a9f8b4d8122d25d19e9927d6';
-        const DIAGNOSIS_API_KEY = '9a13a7c6b90c1f5d2b7c7b8c2d9e1f5d';
-        const GEMINI_API_KEY = 'AIzaSyCbdhnXy1JqSlhLTdOVNMb643AmQs4lOaw';
+const languageSelectorDashboard = document.getElementById('languageSelectorDashboard');
+const languageSelectorAi = document.getElementById('languageSelectorAi');
+const allPages = document.querySelectorAll(".page");
 
-        // --- Page Navigation & Modals ---
-        function showPage(pageId) {
-            allPages.forEach(page => page.classList.remove('active'));
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-                if (pageId === 'dashboard-page') {
-                    initializeDashboard();
-                } else if (pageId === 'ai-page') {
-                    initializeAiAssistant();
+const floatingAiCta = document.getElementById('floatingAiCta');
+
+// --- API Keys (Note: Using AIza key format as instructed for client-side) ---
+// Placeholder key. Replace with a real, client-safe key to enable Gemini chat.
+const GEMINI_API_KEY = 'AIzaSyCbdhnXy1JqSlhLTdOVNMb643AmQs4lOaw'; 
+const GEMINI_TEXT_MODEL = 'gemini-2.5-flash-preview-05-20';
+// --- Localization Data ---
+const LOCALE_DATA = {
+    'hi': {
+        'severe_tag': 'अति आवश्यक', 'warning_tag': 'चेतावनी', 'info_tag': 'जानकारी',
+        'alert_1': 'अगले 24 घंटों के लिए भारी वर्षा की चेतावनी। उचित जल निकासी सुनिश्चित करें।',
+        'alert_2': 'संभावित कीट संक्रमण। तत्काल निरीक्षण के लिए पत्ती के निचले हिस्से की जाँच करें।',
+        'alert_3': 'नई सरकारी सब्सिडी योजना की घोषणा की गई है।',
+        'stages': { 'Sowing': 'बुवाई', 'Vegetative Growth': 'वनस्पति वृद्धि', 'Flowering': 'फूलना', 'Harvesting': 'कटाई' },
+        'stress_level': { 'Optimal': 'इष्टतम', 'Mild Stress': 'हल्का तनाव', 'Severe Stress': 'गंभीर तनाव' },
+        'sell_advice': { 'Best time to sell:': 'बेचने का सबसे अच्छा समय:', 'Sell now for best margin': 'सबसे अच्छे लाभ के लिए अभी बेचें', 'Hold for 3 more days': '3 और दिनों के लिए रोकें', 'Market price is low': 'बाजार मूल्य कम है' }
+    },
+    'ta': {
+        'severe_tag': 'மிக அவசரம்', 'warning_tag': 'எச்சரிக்கை', 'info_tag': 'தகவல்',
+        'alert_1': 'அடுத்த 24 மணி நேரத்திற்கு பலத்த மழை எச்சரிக்கை. சரியான வடிகால் இருப்பதை உறுதி செய்யவும்.',
+        'alert_2': 'சாத்தியமான பூச்சி தாக்குதல். உடனடியாக பரிசோதனை செய்ய இலைகளின் அடிப்பகுதியை சரிபார்க்கவும்.',
+        'alert_3': 'புதிய அரசு மானியத் திட்டம் அறிவிக்கப்பட்டுள்ளது.',
+        'stages': { 'Sowing': 'விதைப்பு', 'Vegetative Growth': 'தாவர வளர்ச்சி', 'Flowering': 'பூக்கும்', 'Harvesting': 'அறுவடை' },
+        'stress_level': { 'Optimal': 'உகந்தது', 'Mild Stress': 'லேசான அழுத்தம்', 'Severe Stress': 'கடுமையான அழுத்தம்' },
+        'sell_advice': { 'Best time to sell:': 'விற்க சிறந்த நேரம்:', 'Sell now for best margin': 'சிறந்த லாபத்திற்கு இப்போதே விற்கவும்', 'Hold for 3 more days': 'மேலும் 3 நாட்களுக்கு வைத்திருக்கவும்', 'Market price is low': 'சந்தை விலை குறைவாக உள்ளது' }
+    },
+    'ma': {
+        'severe_tag': 'അത്യാവശ്യം', 'warning_tag': 'മുന്നറിയിപ്പ്', 'info_tag': 'വിവരം',
+        'alert_1': 'അടുത്ത 24 മണിക്കൂറിനുള്ളിൽ കനത്ത മഴയ്ക്ക് സാധ്യത. ശരിയായ നീർവാർച്ച ഉറപ്പാക്കുക.',
+        'alert_2': 'കീടബാധയ്ക്ക് സാധ്യതയുണ്ട്. ഉടനടി പരിശോധനയ്ക്കായി ഇലകളുടെ അടിഭാഗം പരിശോധിക്കുക.',
+        'alert_3': 'പുതിയ സർക്കാർ സബ്സിഡി പദ്ധതി പ്രഖ്യാപിച്ചു.',
+        'stages': { 'Sowing': 'വിത്ത് വിതയ്ക്കൽ', 'Vegetative Growth': 'സസ്യ വളർച്ച', 'Flowering': 'പുഷ്പ്പിക്കൽ', 'Harvesting': 'വിളവെടുപ്പ്' },
+        'stress_level': { 'Optimal': 'ഒപ്റ്റിമൽ', 'Mild Stress': 'മിതമായ ക്ഷാമം', 'Severe Stress': 'കഠിനമായ ക്ഷാമം' },
+        'sell_advice': { 'Best time to sell:': 'വിൽക്കാൻ പറ്റിയ സമയം:', 'Sell now for best margin': 'മികച്ച ലാഭത്തിനായി ഇപ്പോൾ വിൽക്കുക', 'Hold for 3 more days': 'കൂടുതൽ 3 ദിവസത്തേക്ക് നിർത്തുക', 'Market price is low': 'വിപണി വില കുറവാണ്' }
+    },
+    'en': {
+        'severe_tag': 'URGENT', 'warning_tag': 'WARNING',
+        'info_tag': 'INFO',
+        'alert_1': 'Heavy rainfall warning for the next 24 hours. Ensure proper drainage.',
+        'alert_2': 'Possible pest infestation. Check the underside of leaves for immediate inspection.',
+        'alert_3': 'New government subsidy program announced.',
+        'stages': { 'Sowing': 'Sowing', 'Vegetative Growth': 'Vegetative Growth', 'Flowering': 'Flowering', 'Harvesting': 'Harvesting' },
+        'stress_level': { 'Optimal': 'Optimal', 'Mild Stress': 'Mild Stress', 'Severe Stress': 'Severe Stress' },
+        'sell_advice': { 'Best time to sell:': 'Best Time to Sell:', 'Sell now for best margin': 'Sell now for best margin', 'Hold for 3 more days': 'Hold for 3 more days', 'Market price is low': 'Market price is low' }
+    }
+};
+
+// --- Mock Data for Dashboard (Comprehensive) ---
+const DEMO_DATA = {
+    weather: {
+        temp: '29°C', condition: 'Partly Cloudy', humidity: '68%', wind: '12 km/h SW', rain: '0.8 mm', sunrise: '06:12 AM', sunset: '06:45 PM',
+        forecast: [{ day: 'Mon', icon: '☀️', temp: '30°C' }, { day: 'Tue', icon: '🌦️', temp: '28°C' }, { day: 'Wed', icon: '🌧️', temp: '27°C' }, { day: 'Thu', icon: '⛅', temp: '29°C' }, { day: 'Fri', icon: '☀️', temp: '31°C' }]
+    },
+    market: {
+        price: '₹2,150/quintal', 
+        chart: [2100, 2150, 2120, 2180, 2200, 2150, 2170], // Last 7 days price trend
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        sellAdviceKey: 1 // 1: Sell now (today), 2: Hold (price will rise), 3: Low (price fell)
+    },
+    soil: {
+        npk: 'N: 120, P: 60, K: 80', ph: '6.7',
+        water: {
+            moistureVWC: 35, // Volumetric Water Content (in %)
+            wiltingPoint: 20, // Threshold for severe stress
+            fieldCapacity: 45, // Threshold for overwatering
+        },
+        chart: [6.5, 6.6, 6.7, 6.8, 6.7, 6.6, 6.7],
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    crop: {
+        daysSinceSowing: 42,
+        stage: 'Flowering', // English key used for lookup
+        progress: 65,
+        yield: '3.2 tons/acre'
+    },
+    tips: [
+        'Mulch your crops to retain soil moisture during hot days.',
+        'Inspect your crops regularly for early signs of pests or disease.',
+        'Irrigate early in the morning to reduce water loss from evaporation.',
+        'Rotate crops each season to improve soil health and reduce pests.',
+        'Test your soil pH every 3 months for optimal nutrient uptake.',
+        'Use organic compost to boost soil fertility naturally.',
+        'Keep farm records to track yield and input costs for better planning.'
+    ],
+    // UPDATED: Full list of crops for the Library page
+    cropLibrary: [
+        { name: "Rice", emoji: "🌾", description: "A staple crop. Learn about cultivation, pests, and harvest cycles for rice." },
+        { name: "Maize", emoji: "🌽", description: "A comprehensive guide to growing healthy maize crops." },
+        { name: "Potatoes", emoji: "🥔", description: "Tips for planting, managing, and harvesting potatoes." },
+        { name: "Soybeans", emoji: "🌱", description: "An in-depth guide to growing protein-rich soybeans." },
+        { name: "Coconut", emoji: "🥥", description: "Kerala's iconic crop. Tips on palm management, pests, and yield optimization." },
+        { name: "Rubber", emoji: "🌳", description: "Information on tapping techniques, disease control, and soil management for rubber plantations." },
+        { name: "Cardamom", emoji: "🌶️", description: "A high-value spice crop. Learn about shade management and irrigation for optimal growth." },
+        { name: "Tea", emoji: "🍵", description: "Tips for pruning, plucking, and maintaining soil pH for robust tea gardens." }
+    ],
+    // UPDATED: Full list of resources
+    resources: [
+        { title: "Government Subsidies", emoji: "💰", description: "Information on farming subsidies and financial aid programs.", linkText: "Learn More", pageId: null },
+        { title: "Soil Testing Labs", emoji: "🧪", description: "Find accredited soil testing laboratories near you.", linkText: "Find a Lab", pageId: null },
+        { title: "Market Price Data", emoji: "📈", description: "Get real-time updates on commodity market prices.", linkText: "View Prices", pageId: null },
+        { title: "Community Forum", emoji: "💬", description: "Connect with other farmers to share tips and ask questions.", linkText: "Join Community", pageId: null },
+        { title: "Pest & Disease Diagnosis", emoji: "📸", description: "Upload a photo of your crop to get an instant diagnosis.", linkText: "Diagnose Now", pageId: "diagnosis-page" }
+    ],
+    diagnosis: {
+        Rice: {
+            Pest: { name: "Brown Plant Hopper (BPH)", summary: "BPH causes 'hopperburn,' leading to complete crop failure if severe.", treatment: ["Apply Neem oil 3ml/L of water.", "Introduce natural predators (spider/mirid bugs).", "Maintain optimal drainage to avoid water stagnation."] },
+            Disease: { name: "Rice Blast (Magnaporthe oryzae)", summary: "Fungal disease causing diamond-shaped lesions. Very common during flowering.", treatment: ["Apply Fungicide (Tricyclazole) immediately.", "Avoid excessive nitrogen fertilizer.", "Use blast-resistant varieties for the next season."] }
+        },
+        Default: { name: "Nutrient Deficiency (Nitrogen)", summary: "The lower leaves are turning yellow/pale, indicating lack of Nitrogen, common in the vegetative stage.", treatment: ["Apply Urea (20kg/acre) immediately via foliar spray.", "Ensure adequate soil moisture to facilitate nutrient uptake.", "Perform a soil test for a long-term plan."] }
+    }
+};
+
+// ----------------------------------------------------------------------
+// --- CORE LOGIC: TEXT-TO-SPEECH (TTS) UTILITIES ---
+// ----------------------------------------------------------------------
+
+// Helper to convert base64 audio data to ArrayBuffer
+function base64ToArrayBuffer(base64) {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+// Helper to convert PCM audio data (from API) into a playable WAV Blob
+function pcmToWav(pcmData, sampleRate) {
+    const buffer = new ArrayBuffer(44 + pcmData.length * 2);
+    const view = new DataView(buffer);
+
+    // Helper function to write strings
+    function writeString(view, offset, string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
+    }
+
+    // RIFF identifier
+    writeString(view, 0, 'RIFF');
+    // File length
+    view.setUint32(4, 36 + pcmData.length * 2, true);
+    // WAVE identifier
+    writeString(view, 8, 'WAVE');
+    // fmt chunk identifier
+    writeString(view, 12, 'fmt ');
+    // Format chunk length
+    view.setUint32(16, 16, true);
+    // Sample format (raw pcm)
+    view.setUint16(20, 1, true);
+    // Channel count
+    view.setUint16(22, 1, true);
+    // Sample rate
+    view.setUint32(24, sampleRate, true);
+    // Byte rate (SampleRate * ChannelCount * BitsPerSample/8)
+    view.setUint32(28, sampleRate * 1 * 2, true);
+    // Block align (ChannelCount * BitsPerSample/8)
+    view.setUint16(32, 1 * 2, true);
+    // Bits per sample
+    view.setUint16(34, 16, true);
+    // data chunk identifier
+    writeString(view, 36, 'data');
+    // Data chunk length
+    view.setUint32(40, pcmData.length * 2, true);
+
+    // Write PCM data
+    let offset = 44;
+    for (let i = 0; i < pcmData.length; i++) {
+        view.setInt16(offset, pcmData[i], true);
+        offset += 2;
+    }
+
+    return new Blob([view], { type: 'audio/wav' });
+}
+
+const VOICE_MAP = {
+    'en': { voiceName: 'Kore', langCode: 'en-US' },
+    'hi': { voiceName: 'Kore', langCode: 'hi-IN' }, 
+    'ta': { voiceName: 'Despina', langCode: 'ta-IN' },
+    'ma': { voiceName: 'Charon', langCode: 'en-US' } 
+};
+
+async function getTtsAudio(text, lang) {
+    const config = VOICE_MAP[lang] || VOICE_MAP['en'];
+    const systemPrompt = `Speak the following text in a friendly, informative tone, maintaining an appropriate regional accent (Indian English, Hindi, Tamil, or Malayalam) as the AI farming assistant Vera.`;
+    
+    // Remove strong tags before TTS conversion
+    const cleanText = text.replace(/<\/?strong>/g, '');
+
+    const payload = {
+        contents: [{
+            parts: [{ text: cleanText }]
+        }],
+        generationConfig: {
+            responseModalities: ["AUDIO"],
+            speechConfig: {
+                voiceConfig: {
+                    prebuiltVoiceConfig: { voiceName: config.voiceName }
                 }
             }
+        },
+        systemInstruction: {
+            parts: [{ text: systemPrompt }]
+        }
+    };
+    
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`;
+    
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`TTS API error: ${response.status} - ${response.statusText}`);
         }
 
-        function showHomepageSection(sectionId) {
-            showPage('homepage');
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-        
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
+        const result = await response.json();
+        const part = result?.candidates?.[0]?.content?.parts?.[0];
+        const audioData = part?.inlineData?.data;
+        const mimeType = part?.inlineData?.mimeType;
 
-        // --- User Authentication & Session Management ---
-        function handleSignUp(e) {
-            e.preventDefault();
-            const farmerProfile = {
-                name: document.getElementById("farmerName").value,
-                crop: document.getElementById("farmerCrop").value,
-                location: document.getElementById("farmerLocation").value,
-                area: document.getElementById("farmerArea").value,
-                sowingDate: document.getElementById("sowingDate").value
-            };
-            localStorage.setItem("smartHarvestersProfile", JSON.stringify(farmerProfile));
-            localStorage.setItem('isLoggedIn', 'true');
-            onboardingModal.classList.remove("active");
-            checkUserSession();
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const mockUsers = { 'farmer': 'pass', 'aman': '12345', 'sita': 'securepass' };
-            if (mockUsers[username] === password) {
-                localStorage.setItem('isLoggedIn', 'true');
-                loginModal.classList.remove('active');
-                checkUserSession();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        }
-
-        function handleLogout(e) {
-            e.preventDefault();
-            localStorage.clear();
-            checkUserSession();
-            showPage('homepage'); // Redirect to homepage on logout
-        }
-
-        function checkUserSession() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const hasProfile = localStorage.getItem('smartHarvestersProfile');
-
-            if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'block';
-            if (signupBtn) signupBtn.style.display = isLoggedIn ? 'none' : 'block';
-            if (heroSignupBtn) heroSignupBtn.style.display = isLoggedIn ? 'none' : 'block';
-            if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
-            if (logoutBtnApp) logoutBtnApp.style.display = isLoggedIn ? 'block' : 'none';
-
-            const existingDashboardLink = navLinks.querySelector('a[onclick*="dashboard-page"]');
-            if (isLoggedIn) {
-                if (!existingDashboardLink) {
-                    const dashboardLink = document.createElement('a');
-                    dashboardLink.href = '#';
-                    dashboardLink.textContent = 'Dashboard';
-                    dashboardLink.onclick = () => showPage('dashboard-page');
-                    navLinks.insertBefore(dashboardLink, navLinks.firstChild);
-                }
-                if (hasProfile) {
-                    showPage('dashboard-page');
-                } else {
-                    onboardingModal.classList.add('active');
-                    showPage('homepage');
-                }
-            } else {
-                if (existingDashboardLink) {
-                    existingDashboardLink.remove();
-                }
-                showPage('homepage');
-            }
-        }
-
-        // --- Dashboard Data Functions (mocked) ---
-        async function fetchWeather(location) { 
-            console.log(`Fetching weather for ${location}...`);
-            // Mock API call
-            return {
-                temperature: '28°C',
-                condition: 'Partly Cloudy',
-                humidity: '75%',
-                wind: '10 km/h NE',
-                rain: '2mm predicted',
-                sunrise: '06:15 AM',
-                sunset: '06:45 PM',
-                forecast: [
-                    { day: 'Wed', temp: '29°C', condition: 'Sunny' },
-                    { day: 'Thu', temp: '27°C', condition: 'Rainy' },
-                    { day: 'Fri', temp: '25°C', condition: 'Cloudy' },
-                    { day: 'Sat', temp: '30°C', condition: 'Sunny' },
-                    { day: 'Sun', temp: '28°C', condition: 'Partly Cloudy' }
-                ]
-            };
-        }
-
-        function updateWeatherCard(data) {
-            document.getElementById('currentTemp').textContent = data.temperature;
-            document.getElementById('currentCondition').textContent = data.condition;
-            document.getElementById('currentHumidity').textContent = data.humidity;
-            document.getElementById('weatherWind').textContent = data.wind;
-            document.getElementById('weatherRain').textContent = data.rain;
-            document.getElementById('weatherSunrise').textContent = data.sunrise;
-            document.getElementById('weatherSunset').textContent = data.sunset;
-
-            const forecastList = document.getElementById('forecastList');
-            forecastList.innerHTML = data.forecast.map(day => 
-                `<li>${day.day}: ${day.temp}, ${day.condition}</li>`
-            ).join('');
-        }
-        
-        // Mock data fetching functions
-        async function fetchMarketData(crop) {
-            console.log(`Fetching market data for ${crop}...`);
-            return {
-                price: '₹25/kg',
-                history: [
-                    { label: 'Jan', value: 20 },
-                    { label: 'Feb', value: 22 },
-                    { label: 'Mar', value: 25 },
-                    { label: 'Apr', value: 24 },
-                    { label: 'May', value: 27 }
-                ]
-            };
-        }
-
-        async function fetchSoilData(location) {
-            console.log(`Fetching soil data for ${location}...`);
-            return {
-                npk: 'N: 120, P: 80, K: 150',
-                ph: '6.5',
-                history: [
-                    { label: 'Jan', value: 6.8 },
-                    { label: 'Feb', value: 6.7 },
-                    { label: 'Mar', value: 6.5 },
-                    { label: 'Apr', value: 6.4 },
-                    { label: 'May', value: 6.5 }
-                ]
-            };
-        }
-        
-        function updateProgress(sowingDate) {
-            const today = new Date();
-            const sowDate = new Date(sowingDate);
-            const days = Math.floor((today - sowDate) / (1000 * 60 * 60 * 24));
-            const totalDays = 120; // Example average crop cycle
-            const progress = Math.min(100, (days / totalDays) * 100);
-
-            document.getElementById('daysSinceSowing').textContent = `Days since Sowing: ${days}`;
-            document.getElementById('cropProgressBar').style.width = `${progress}%`;
-
-            let stage = 'Sowing';
-            if (progress > 20) stage = 'Vegetative Growth';
-            if (progress > 50) stage = 'Flowering';
-            if (progress > 80) stage = 'Harvesting';
-            document.getElementById('cropStage').textContent = `Stage: ${stage}`;
-        }
-
-        // --- Dashboard Initialization ---
-        function initializeDashboard() {
-            const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
-            if (!farmerProfile) return;
-
-            document.getElementById("farmDetails").textContent = `${farmerProfile.name}'s Farm (${farmerProfile.crop}, ${farmerProfile.area} acres)`;
-
-            async function updateDashboard() {
-                const weatherData = await fetchWeather(farmerProfile.location);
-                updateWeatherCard(weatherData);
-
-                const marketData = await fetchMarketData(farmerProfile.crop);
-                document.getElementById('currentPrice').textContent = marketData.price;
-
-                const soilData = await fetchSoilData(farmerProfile.location);
-                document.getElementById('npkLevels').textContent = soilData.npk;
-                document.getElementById('phLevel').textContent = soilData.ph;
-
-                updateProgress(farmerProfile.sowingDate);
-
-                // Initialize charts
-                new Chart(document.getElementById('yieldChart').getContext('2d'), {
-                    type: 'line', data: {
-                        labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                        datasets: [{ label: 'Expected Yield (tons)', data: [1.2, 1.5, 1.8, 2.0, 2.1], borderColor: '#0A6640', tension: 0.1 }]
-                    }
-                });
-                new Chart(document.getElementById('soilChart').getContext('2d'), {
-                    type: 'bar', data: {
-                        labels: ['Nitrogen', 'Phosphorus', 'Potassium'],
-                        datasets: [{ label: 'NPK Levels (kg/ha)', data: [120, 80, 150], backgroundColor: ['#2E8B57', '#FFD700', '#2F4F4F'] }]
-                    }
-                });
-                new Chart(document.getElementById('marketChart').getContext('2d'), {
-                    type: 'line', data: {
-                        labels: marketData.history.map(d => d.label),
-                        datasets: [{ label: 'Market Price (₹/kg)', data: marketData.history.map(d => d.value), borderColor: '#2196F3', tension: 0.4 }]
-                    }
-                });
-
-                // Mock Alerts
-                const alertsList = document.getElementById('alertsList');
-                alertsList.innerHTML = `
-                    <li><span class="alert-tag severe">URGENT</span> Heavy rainfall warning for the next 24 hours. Ensure proper drainage.</li>
-                    <li><span class="alert-tag moderate">WARNING</span> Possible pest infestation. Inspect your fields for signs of aphids.</li>
-                    <li><span class="alert-tag info">INFO</span> New government subsidy program announced for.${farmerProfile.crop} farmers.</li>
-                `;
-            }
-            updateDashboard();
-        }
-
-
-        // --- AI Assistant ---
-        function initializeAiAssistant() {
-            const chatBox = document.getElementById("chatBox");
-            const textInput = document.getElementById("textInput");
-            const sendBtn = document.getElementById("sendBtn");
-            const voiceBtn = document.getElementById("voiceBtn");
-            const aiStatus = document.getElementById("aiStatus");
+        if (audioData && mimeType && mimeType.startsWith("audio/L16")) {
+            const match = mimeType.match(/rate=(\d+)/);
+            const sampleRate = match ? parseInt(match[1], 10) : 16000;
             
-            if (chatBox) chatBox.innerHTML = '';
+            const pcmDataBuffer = base64ToArrayBuffer(audioData);
+            const pcm16 = new Int16Array(pcmDataBuffer);
+            const wavBlob = pcmToWav(pcm16, sampleRate);
+            
+            return URL.createObjectURL(wavBlob);
+        } else {
+            console.error("TTS response missing valid audio data or mime type.", mimeType);
+            return null;
+        }
 
-            if (!chatBox || !textInput || !sendBtn) {
-                console.error("AI Assistant elements not found. Skipping initialization.");
-                return;
+    } catch (error) {
+        console.error("TTS error:", error);
+        return null;
+    }
+}
+
+
+// ----------------------------------------------------------------------
+// --- CORE LOGIC: LOCALIZATION ---
+// ----------------------------------------------------------------------
+
+/**
+ * Dynamically updates all localized content on the page based on the selected language.
+ * @param {string} lang The language code ('en', 'hi', 'ta', 'ma').
+ */
+function updateContentLanguage(lang) {
+    const locale = LOCALE_DATA[lang] || LOCALE_DATA['en'];
+    const profile = JSON.parse(localStorage.getItem("smartHarvestersProfile")) || { crop: 'crop' };
+    const cropName = profile.crop;
+
+    // 1. Update text content for elements with data attributes
+    document.querySelectorAll('[data-en]').forEach(element => {
+        const newText = element.getAttribute(`data-${lang}`) || element.getAttribute('data-en');
+        if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'password')) {
+            element.placeholder = newText;
+        } else if (element.tagName === 'A' || element.tagName === 'BUTTON') {
+            // Check if content is dynamic before overwriting
+            if (!element.classList.contains('btn-logout') && !element.classList.contains('nav-links')) {
+                 element.textContent = newText;
             }
+        } else if (newText) {
+             // Handle elements like h1, p
+             const span = element.querySelector('span');
+             if (span) {
+                 // Preserve inner span if it exists (e.g., icons, values)
+                 element.childNodes[0].nodeValue = newText.trim().replace(/\s*$/, ' ');
+             } else {
+                 element.textContent = newText;
+             }
+        }
+    });
 
-            const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile"));
-            const farmerName = farmerProfile ? farmerProfile.name : "Farmer";
-            const farmerCrop = farmerProfile ? farmerProfile.crop : "your crop";
-            const farmerLocation = farmerProfile ? farmerProfile.location : "your location";
+    // 2. Update descriptive labels (e.g., "Temperature: X")
+    document.querySelectorAll('[data-en-label]').forEach(element => {
+        const labelAttr = `data-${lang}-label`;
+        const labelText = element.getAttribute(labelAttr);
+        if (labelText) {
+            const span = element.querySelector('span');
+            // Set the label text while preserving the span content
+            element.childNodes[0].nodeValue = `${labelText}: `;
+            if (span) element.appendChild(span); 
+        }
+    });
 
-            function addMessage(text, sender) {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add(`${sender}-message`);
-                const bubble = document.createElement('div');
-                bubble.classList.add('message-bubble');
-                text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                bubble.innerHTML = `<p>${text}</p>`;
-                if (sender === 'ai') {
-                    const avatar = document.createElement('span');
-                    avatar.classList.add('ai-avatar');
-                    avatar.textContent = '👩‍🌾';
-                    messageDiv.appendChild(avatar);
-                }
-                messageDiv.appendChild(bubble);
-                chatBox.appendChild(messageDiv);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
+    // 3. Update Alerts & Advisories
+    const alertsList = document.getElementById('alertsList');
+    if (alertsList) {
+        alertsList.innerHTML = `
+            <li><span class="alert-tag severe">${locale.severe_tag}</span> ${locale.alert_1}</li>
+            <li><span class="alert-tag moderate">${locale.warning_tag}</span> ${locale.alert_2}</li>
+            <li><span class="alert-tag info">${locale.info_tag}</span> ${locale.alert_3} ${lang !== 'en' ? cropName + ' ' : ''} farmers.</li>
+        `;
+    }
 
-            function showTypingIndicator() {
-                const typingDiv = document.createElement('div');
-                typingDiv.classList.add('ai-message');
-                typingDiv.id = 'typing-indicator';
-                typingDiv.innerHTML = `<span class="ai-avatar">👩‍🌾</span><div class="message-bubble typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
-                chatBox.appendChild(typingDiv);
-                chatBox.scrollTop = chatBox.scrollHeight;
-                if (aiStatus) {
-                    aiStatus.textContent = "Typing...";
-                    aiStatus.classList.remove('online');
-                    aiStatus.classList.add('typing');
-                }
-            }
+    // 4. Update dynamic content from DEMO_DATA that uses localization keys
+    const stageElement = document.getElementById('cropStage');
+    if (stageElement) {
+        const stageKey = DEMO_DATA.crop.stage;
+        const stageLabel = stageElement.getAttribute(`data-${lang}-label`);
+        const translatedStage = locale.stages[stageKey] || stageKey;
+        stageElement.textContent = `${stageLabel}: ${translatedStage}`;
+    }
+    
+    // 5. Update Water Stress Level
+    const stressLevelElement = document.getElementById('waterStressLevel');
+    if(stressLevelElement) {
+        const currentStressKey = stressLevelElement.getAttribute('data-stress-key') || 'Optimal';
+        const stressLabel = stressLevelElement.closest('p').getAttribute(`data-${lang}-label`);
+        const translatedStress = locale.stress_level[currentStressKey] || currentStressKey;
+        stressLevelElement.textContent = translatedStress;
+        // Re-apply label to parent <p>
+        stressLevelElement.closest('p').childNodes[0].nodeValue = `${stressLabel}: `;
+        stressLevelElement.closest('p').appendChild(stressLevelElement);
+    }
 
-            function removeTypingIndicator() {
-                const typingIndicator = document.getElementById('typing-indicator');
-                if (typingIndicator) {
-                    typingIndicator.remove();
-                }
-                if (aiStatus) {
-                    aiStatus.textContent = "Online";
-                    aiStatus.classList.remove('typing');
-                    aiStatus.classList.add('online');
-                }
-            }
+    // 6. Update Market Advice
+    const sellAdviceElement = document.getElementById('sellAdvice');
+    if(sellAdviceElement) {
+        const adviceKey = sellAdviceElement.getAttribute('data-advice-key');
+        let adviceText = '';
+        if (adviceKey == 1) adviceText = locale.sell_advice['Sell now for best margin'];
+        else if (adviceKey == 2) adviceText = locale.sell_advice['Hold for 3 more days'];
+        else adviceText = locale.sell_advice['Market price is low'];
+        sellAdviceElement.textContent = adviceText;
+    }
 
-            async function getAiResponse(query) {
-                if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-                    return "Please add your Gemini API key in the script to enable the AI assistant.";
-                }
 
-                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-                const prompt = `You are Vera, a helpful AI farming assistant for an app called Smart Harvesters. The user's name is ${farmerName}. They are located in/near ${farmerLocation}. They are currently growing ${farmerCrop}. You must answer their questions concisely and in a helpful, friendly tone, specifically for their crop and location. If the user asks a general question, greet them by name. User's question: "${query}"`;
+    // 7. Sync language selectors
+    if (languageSelectorDashboard && languageSelectorDashboard.value !== lang) languageSelectorDashboard.value = lang;
+    if (languageSelectorAi && languageSelectorAi.value !== lang) languageSelectorAi.value = lang;
 
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    localStorage.setItem('currentLanguage', lang);
+}
+
+// ----------------------------------------------------------------------
+// --- CORE LOGIC: NAVIGATION & AUTHENTICATION ---
+// ----------------------------------------------------------------------
+
+function showPage(pageId) {
+    // If navigating away from AI page, stop any ongoing TTS
+    if (document.getElementById('ai-page').classList.contains('active') && window.currentPlayingAudio) {
+        window.currentPlayingAudio.pause();
+        window.currentPlayingAudio = null;
+    }
+    
+    allPages.forEach(page => page.classList.remove('active'));
+    
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+        const currentLang = localStorage.getItem('currentLanguage') || 'en';
+        
+        // Initialize specific page contents
+        if (pageId === 'dashboard-page') {
+            initializeDashboard();
+        } else if (pageId === 'ai-page') {
+            initializeAiAssistant();
+        } else if (pageId === 'diagnosis-page') {
+            document.getElementById('fileInputDiagnosis').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('diagnosisResult').style.display = 'none';
+            document.getElementById('diagnosisLoading').style.display = 'none';
+            document.getElementById('diagnosisPlaceholder').style.display = 'block';
+        } else if (pageId === 'crop-library-page') {
+            initializeCropLibrary(); // Call the new initializer
+        } else if (pageId === 'resources-page') {
+            initializeResources(); // Call the new initializer
+        }
+        
+        // Always apply language after loading content
+        updateContentLanguage(currentLang);
+    }
+}
+
+function showHomepageSection(sectionId) {
+    showPage('homepage');
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        // Clear error message when closing login modal
+        if (modalId === 'loginModal') {
+            const loginError = document.getElementById('loginError');
+            if (loginError) loginError.style.display = 'none';
+        }
+    }
+}
+
+// Auth handlers are standard
+function handleSignUp(e) {
+    e.preventDefault();
+    const farmerProfile = {
+        name: document.getElementById("farmerName").value,
+        crop: document.getElementById("farmerCrop").value,
+        location: document.getElementById("farmerLocation").value,
+        area: document.getElementById("farmerArea").value,
+        sowingDate: document.getElementById("sowingDate").value
+    };
+    localStorage.setItem("smartHarvestersProfile", JSON.stringify(farmerProfile));
+    localStorage.setItem('isLoggedIn', 'true');
+    onboardingModal.classList.remove("active");
+    checkUserSession();
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const mockUsers = { 'farmer': 'pass', 'aman': '12345', 'sita': 'securepass' };
+    const loginError = document.getElementById('loginError');
+    
+    if (mockUsers[username] && mockUsers[username] === password) {
+        localStorage.setItem('isLoggedIn', 'true');
+        loginModal.classList.remove('active');
+        if (loginError) loginError.style.display = 'none';
+        
+        // Set default profile if logging in without one (e.g., first time mock login)
+        if (!localStorage.getItem("smartHarvestersProfile")) {
+            localStorage.setItem("smartHarvestersProfile", JSON.stringify({
+                name: username, crop: "Rice", location: "Kerala, India", area: "3", sowingDate: "2024-10-01"
+            }));
+        }
+        checkUserSession();
+    } else {
+        if (loginError) loginError.style.display = 'block';
+    }
+}
+
+function handleLogout(e) {
+    e.preventDefault();
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('smartHarvestersProfile');
+    checkUserSession();
+    showPage('homepage');
+}
+
+function checkUserSession() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const hasProfile = localStorage.getItem('smartHarvestersProfile');
+
+    // Update UI element visibility
+    if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'block';
+    if (signupBtn) signupBtn.style.display = isLoggedIn ? 'none' : 'block';
+    if (heroSignupBtn) heroSignupBtn.style.display = isLoggedIn ? 'none' : 'block';
+    if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
+    if (logoutBtnApp) logoutBtnApp.style.display = isLoggedIn ? 'block' : 'none';
+    if (navDashboardLink) navDashboardLink.style.display = isLoggedIn ? 'block' : 'none';
+
+    // NEW: Control visibility of the floating CTA
+    if (floatingAiCta) {
+        const showCta = isLoggedIn && hasProfile;
+        floatingAiCta.style.display = showCta ? 'flex' : 'none';
+    }
+
+    if (isLoggedIn && hasProfile && document.getElementById('homepage').classList.contains('active')) {
+         showPage('dashboard-page');
+    } else if (isLoggedIn && !hasProfile) {
+         onboardingModal.classList.add('active');
+         showPage('homepage');
+    }
+    
+    // Reapply language on UI state change
+    updateContentLanguage(localStorage.getItem('currentLanguage') || 'en');
+}
+
+// ----------------------------------------------------------------------
+// --- CORE LOGIC: DASHBOARD INITIALIZATION ---
+// ----------------------------------------------------------------------
+
+function initializeDashboard() {
+    const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile")) || {
+        name: "Demo Farmer", crop: "Rice", location: "Thrissur, Kerala", area: "2.5", sowingDate: "2025-08-01"
+    };
+    const currentLang = localStorage.getItem('currentLanguage') || 'en';
+    const locale = LOCALE_DATA[currentLang];
+
+    // 1. Update Farm Details
+    document.getElementById('farmDetails').textContent = `${farmerProfile.name}'s Farm (${farmerProfile.crop}, ${farmerProfile.area} acres)`;
+
+    // 2. Weather
+    const weatherData = DEMO_DATA.weather;
+    document.getElementById('currentTemp').textContent = weatherData.temp;
+    document.getElementById('currentCondition').textContent = weatherData.condition;
+    document.getElementById('currentHumidity').textContent = weatherData.humidity;
+    document.getElementById('weatherWind').textContent = weatherData.wind;
+    document.getElementById('weatherRain').textContent = weatherData.rain;
+    document.getElementById('weatherSunrise').textContent = weatherData.sunrise;
+    document.getElementById('weatherSunset').textContent = weatherData.sunset;
+    const forecastList = document.getElementById('forecastList');
+    if (forecastList) {
+        forecastList.innerHTML = weatherData.forecast.map(day => 
+            `<li><span class="emoji">${day.icon}</span> ${day.day}: ${day.temp}</li>`
+        ).join('');
+    }
+
+    // 3. Water Stress & Irrigation
+    const moisture = DEMO_DATA.soil.water.moistureVWC;
+    const wilting = DEMO_DATA.soil.water.wiltingPoint;
+    const capacity = DEMO_DATA.soil.water.fieldCapacity;
+    let stressKey;
+    let adviceText;
+
+    if (moisture < wilting + 5) {
+        stressKey = 'Severe Stress';
+        adviceText = `URGENT: Initiate irrigation within 3 hours. Current moisture (${moisture}%) is critically low.`;
+    } else if (moisture < capacity - 10) {
+        stressKey = 'Mild Stress';
+        adviceText = `Water is adequate, but trending low. Schedule irrigation in the next 24 hours.`;
+    } else {
+        stressKey = 'Optimal';
+        adviceText = `Soil moisture is optimal (${moisture}%). No irrigation needed. Monitor forecast.`;
+    }
+
+    document.getElementById('soilMoisture').textContent = `${moisture}%`;
+    const stressLevelElement = document.getElementById('waterStressLevel');
+    stressLevelElement.setAttribute('data-stress-key', stressKey);
+    // Setting text here in English, localization updates it immediately after
+    stressLevelElement.textContent = stressKey; 
+    document.getElementById('irrigationAdvice').textContent = adviceText;
+
+    // Update bar visually
+    const moistureBar = document.getElementById('moistureBar');
+    if (moistureBar) {
+        // Calculate percentage relative to field capacity
+        const moisturePercent = Math.min(100, (moisture / capacity) * 100);
+        moistureBar.style.width = `${moisturePercent}%`;
+        
+        // Color code the bar based on stress level
+        if (stressKey === 'Severe Stress') moistureBar.style.backgroundColor = '#F44336'; // Red
+        else if (stressKey === 'Mild Stress') moistureBar.style.backgroundColor = '#FFC107'; // Yellow
+        else moistureBar.style.backgroundColor = '#2196F3'; // Blue (Optimal)
+    }
+
+
+    // 4. Crop Progress
+    const cropData = DEMO_DATA.crop;
+    document.getElementById('daysSinceSowing').querySelector('span').textContent = cropData.daysSinceSowing;
+    document.getElementById('cropStage').querySelector('span').textContent = cropData.stage;
+    const cropProgressBar = document.getElementById('cropProgressBar');
+    if (cropProgressBar) cropProgressBar.style.width = `${cropData.progress}%`;
+
+    // 5. Yield & Insights
+    document.getElementById('projectedYield').querySelector('span').textContent = cropData.yield;
+    
+    // 6. Soil Health & Market
+    document.getElementById('npkLevels').textContent = DEMO_DATA.soil.npk;
+    document.getElementById('phLevel').textContent = DEMO_DATA.soil.ph;
+    document.getElementById('currentPrice').textContent = DEMO_DATA.market.price;
+    
+    // 7. Market Advice
+    const sellAdviceElement = document.getElementById('sellAdvice');
+    const sellKey = DEMO_DATA.market.sellAdviceKey; 
+    let adviceTextKey = 'Market price is low';
+    if (sellKey === 1) adviceTextKey = 'Sell now for best margin';
+    else if (sellKey === 2) adviceTextKey = 'Hold for 3 more days';
+
+    sellAdviceElement.setAttribute('data-advice-key', sellKey);
+    // Localization will handle text update
+    sellAdviceElement.textContent = locale.sell_advice[adviceTextKey]; 
+    sellAdviceElement.style.color = sellKey === 1 ? 'var(--primary-color)' : (sellKey === 3 ? '#F44336' : '#FFC107');
+
+
+    // 8. Daily Tip (Randomized)
+    const today = new Date().getDay();
+    document.getElementById('dailyTip').textContent = DEMO_DATA.tips[today % DEMO_DATA.tips.length];
+
+    // Reapply language to update all newly set labels
+    updateContentLanguage(currentLang);
+    
+    // 9. Initialize Charts
+    const initChart = (id, data) => {
+        const chartElement = document.getElementById(id);
+        if (chartElement && chartElement.chart) chartElement.chart.destroy();
+        const ctx = chartElement.getContext('2d');
+        chartElement.chart = new Chart(ctx, data);
+    };
+    
+    // Yield Chart
+    initChart('yieldChart', {
+        type: 'line', data: {
+            labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep'],
+            datasets: [{ label: 'Expected Yield (tons)', data: [1.2, 1.5, 1.8, 2.0, 2.1], borderColor: '#0A6640', tension: 0.2, fill: true, backgroundColor: 'rgba(10, 102, 64, 0.1)', pointRadius: 5, pointHoverRadius: 8 }]
+        }, options: { 
+            responsive: true, maintainAspectRatio: false, 
+            plugins: { legend: { display: false } }, 
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Soil Chart
+    initChart('soilChart', {
+        type: 'bar', data: {
+            labels: ['Nitrogen', 'Phosphorus', 'Potassium'],
+            datasets: [{ 
+                label: 'NPK Levels (kg/ha)', 
+                data: [120, 60, 80], 
+                backgroundColor: ['#2E8B57', '#FFD700', '#2196F3'] 
+            }]
+        }, options: { 
+            responsive: true, maintainAspectRatio: false, 
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } } 
+        }
+    });
+
+    // Market Chart
+    initChart('marketChart', {
+        type: 'line', data: {
+            labels: DEMO_DATA.market.labels,
+            datasets: [{ label: 'Market Price (₹/quintal)', data: DEMO_DATA.market.chart, borderColor: '#2196F3', tension: 0.4, pointBackgroundColor: (ctx) => ctx.dataIndex === 5 ? 'red' : '#2196F3', pointRadius: 5, pointHoverRadius: 8 }]
+        }, options: { 
+            responsive: true, maintainAspectRatio: false, 
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: false } }
+        }
+    });
+}
+
+// ----------------------------------------------------------------------
+// --- INITIALIZE CROP LIBRARY PAGE (NEW FUNCTION) ---
+// ----------------------------------------------------------------------
+
+function initializeCropLibrary() {
+    const cropGrid = document.querySelector('#crop-library-page .crop-grid');
+    if (!cropGrid) return;
+    
+    // Clear existing content
+    cropGrid.innerHTML = ''; 
+
+    DEMO_DATA.cropLibrary.forEach(crop => {
+        // Mock localization keys for the description and link text based on the English name
+        
+        const cardHtml = `
+            <div class="crop-card">
+                <div class="emoji">${crop.emoji}</div>
+                <h3 data-en="${crop.name}" 
+                    data-hi="${crop.name === 'Rice' ? 'चावल' : crop.name === 'Maize' ? 'मक्का' : crop.name === 'Potatoes' ? 'आलू' : crop.name === 'Soybeans' ? 'सोयाबीन' : crop.name === 'Coconut' ? 'नारियल' : crop.name === 'Rubber' ? 'रबर' : crop.name === 'Cardamom' ? 'इलायची' : 'चाय'}" 
+                    data-ta="${crop.name === 'Rice' ? 'அரிசி' : crop.name === 'Maize' ? 'மக்காச்சோளம்' : crop.name === 'Potatoes' ? 'உருளைக்கிழங்கு' : crop.name === 'Soybeans' ? 'சோயாபீன்ஸ்' : crop.name === 'Coconut' ? 'தேங்காய்' : crop.name === 'Rubber' ? 'ரப்பர்' : crop.name === 'Cardamom' ? 'ஏலக்காய்' : 'தேயிலை'}" 
+                    data-ma="${crop.name === 'Rice' ? 'നെല്ല്' : crop.name === 'Maize' ? 'ചോളം' : crop.name === 'Potatoes' ? 'ഉരുളക്കിഴങ്ങ്' : crop.name === 'Soybeans' ? 'സോയാബീൻസ്' : crop.name === 'Coconut' ? 'തെങ്ങ്' : crop.name === 'Rubber' ? 'റബ്ബർ' : crop.name === 'Cardamom' ? 'ഏലം' : 'ചായ'}">${crop.name}</h3>
+                <p data-en="${crop.description}">${crop.description}</p>
+                <a href="#" class="action-button small-btn" data-en="View Details" data-hi="विवरण देखें" data-ta="விவரங்களைப் பார்க்கவும்" data-ma="വിശദാംശങ്ങൾ കാണുക">View Details</a>
+            </div>
+        `;
+        cropGrid.insertAdjacentHTML('beforeend', cardHtml);
+    });
+    // Call localization immediately after population to apply translation
+    updateContentLanguage(localStorage.getItem('currentLanguage') || 'en');
+}
+
+// ----------------------------------------------------------------------
+// --- INITIALIZE RESOURCES PAGE (NEW FUNCTION) ---
+// ----------------------------------------------------------------------
+
+function initializeResources() {
+    const resourcesList = document.querySelector('#resources-page .resources-list');
+    if (!resourcesList) return;
+
+    // Clear existing content
+    resourcesList.innerHTML = ''; 
+
+    DEMO_DATA.resources.forEach(resource => {
+        // Determine if it's a diagnosis link or general link
+        const clickAction = resource.pageId ? `onclick="showPage('${resource.pageId}')"` : '';
+        
+        const cardHtml = `
+            <div class="resource-card">
+                <div class="emoji">${resource.emoji}</div>
+                <h3 data-en="${resource.title}" 
+                    data-hi="${resource.title === 'Government Subsidies' ? 'सरकारी सब्सिडी' : resource.title === 'Soil Testing Labs' ? 'मिट्टी परीक्षण प्रयोगशालाएं' : resource.title === 'Market Price Data' ? 'बाजार मूल्य डेटा' : resource.title === 'Community Forum' ? 'सामुदायिक मंच' : 'कीट और रोग निदान'}">
+                    ${resource.title}
+                </h3>
+                <p data-en="${resource.description}">${resource.description}</p>
+                <a href="#" class="action-button small-btn" 
+                   data-en="${resource.linkText}" 
+                   data-hi="${resource.linkText === 'Learn More' ? 'और जानें' : resource.linkText === 'Find a Lab' ? 'लैब खोजें' : resource.linkText === 'View Prices' ? 'कीमतें देखें' : resource.linkText === 'Join Community' ? 'समुदाय में शामिल हों' : 'निदान करें'}"
+                   ${clickAction}>
+                   ${resource.linkText}
+                </a>
+            </div>
+        `;
+        resourcesList.insertAdjacentHTML('beforeend', cardHtml);
+    });
+    // Call localization immediately after population to apply translation
+    updateContentLanguage(localStorage.getItem('currentLanguage') || 'en');
+}
+
+// ----------------------------------------------------------------------
+// --- CORE LOGIC: AI ASSISTANT ---
+// ----------------------------------------------------------------------
+
+function initializeAiAssistant() {
+    const chatBox = document.getElementById("chatBox");
+    const textInput = document.getElementById("textInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const voiceBtn = document.getElementById("voiceBtn");
+    const aiStatus = document.getElementById("aiStatus");
+    const currentLang = localStorage.getItem('currentLanguage') || 'en';
+    
+    // Clear chat on re-initialization (e.g., language change)
+    if (chatBox) chatBox.innerHTML = '';
+
+    const farmerProfile = JSON.parse(localStorage.getItem("smartHarvestersProfile")) || {
+        name: "Demo Farmer", crop: "Rice", location: "Thrissur, Kerala"
+    };
+    const { name: farmerName, crop: farmerCrop, location: farmerLocation } = farmerProfile;
+    const langName = { en: 'English', hi: 'Hindi', ta: 'Tamil', ma: 'Malayalam' }[currentLang];
+
+    function addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add(`${sender}-message`);
+        const bubble = document.createElement('div');
+        bubble.classList.add('message-bubble');
+        text = text.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
+                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        const p = document.createElement('p');
+        p.innerHTML = text;
+
+        if (sender === 'ai') {
+            const avatar = document.createElement('span');
+            avatar.classList.add('ai-avatar');
+            avatar.textContent = '👩‍🌾';
+            messageDiv.appendChild(avatar);
+
+            // Add TTS button
+            const playBtn = document.createElement('button');
+            playBtn.classList.add('tts-play-btn');
+            playBtn.innerHTML = '<span class="material-icons" style="font-size: 1.5rem;">volume_up</span>';
+            
+            playBtn.addEventListener('click', async () => {
+                const originalIcon = playBtn.innerHTML;
+                const originalColor = playBtn.style.color;
+                
+                // Set loading state
+                playBtn.innerHTML = '<span class="material-icons spin-animation" style="font-size: 1.5rem;">sync</span>';
+                playBtn.style.color = '#FFD700'; 
+                playBtn.disabled = true;
+
+                const audioUrl = await getTtsAudio(p.textContent, localStorage.getItem('currentLanguage') || 'en');
+                
+                playBtn.innerHTML = originalIcon;
+                playBtn.style.color = originalColor;
+                playBtn.disabled = false;
+
+                if (audioUrl) {
+                    const audio = new Audio(audioUrl);
+                    window.currentPlayingAudio = audio; // Global reference for pausing
+                    
+                    audio.onplaying = () => { playBtn.style.color = '#F44336'; }; // Red while playing
+                    audio.onended = () => { 
+                        playBtn.style.color = originalColor; 
+                        window.currentPlayingAudio = null;
+                        URL.revokeObjectURL(audioUrl);
+                    };
+                    
+                    audio.play().catch(e => {
+                        console.error("Audio playback failed:", e);
+                        // Fallback to original state on error
+                        playBtn.style.color = originalColor; 
+                        window.currentPlayingAudio = null;
+                        URL.revokeObjectURL(audioUrl);
                     });
-                    if (!response.ok) throw new Error(`API error: ${response.statusText}`);
-                    const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
-                } catch (error) {
-                    console.error("Error fetching AI response:", error);
-                    return "I'm having trouble connecting to my brain right now. Please check the console for errors or try again later.";
+                } else {
+                    console.warn("Could not retrieve audio URL.");
                 }
-            }
-
-            async function processQuery(query) {
-                if (!query.trim()) return;
-                addMessage(query, 'user');
-                textInput.value = '';
-                showTypingIndicator();
-                const aiResponse = await getAiResponse(query);
-                removeTypingIndicator();
-                addMessage(aiResponse, 'ai');
-            }
-
-            // --- Voice Recognition ---
-            let recognition;
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.lang = 'en-IN';
-                recognition.interimResults = false;
-
-                recognition.onstart = function() {
-                    voiceBtn.style.color = 'red';
-                    textInput.placeholder = 'Listening...';
-                };
-
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    textInput.value = transcript;
-                    processQuery(transcript);
-                };
-
-                recognition.onerror = function(event) {
-                    console.error('Speech recognition error', event);
-                    voiceBtn.style.color = '#58a45c';
-                    textInput.placeholder = 'Ask Vera anything about your farm...';
-                };
-
-                recognition.onend = function() {
-                    voiceBtn.style.color = '#58a45c';
-                    textInput.placeholder = 'Ask Vera anything about your farm...';
-                };
-            }
-
-            if (voiceBtn) {
-                voiceBtn.addEventListener('click', () => {
-                    if (recognition) {
-                        try {
-                            recognition.start();
-                        } catch (e) {
-                            console.warn("Speech recognition is already running. Please wait.");
-                        }
-                    } else {
-                        alert("Voice recognition is not supported in your browser.");
-                    }
-                });
-            }
-
-            if (sendBtn) sendBtn.addEventListener('click', () => processQuery(textInput.value));
-            if (textInput) textInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') processQuery(textInput.value);
             });
 
-            addMessage(`Hello ${farmerName}! I'm Vera. How can I help with your ${farmerCrop} farm today?`, 'ai');
-        }
-
-        // --- Global Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            checkUserSession();
-
-            if (signupBtn) signupBtn.addEventListener('click', (e) => { e.preventDefault(); onboardingModal.classList.add("active"); });
-            if (heroSignupBtn) heroSignupBtn.addEventListener('click', (e) => { e.preventDefault(); onboardingModal.classList.add("active"); });
-            if (loginBtn) loginBtn.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.add("active"); });
+            bubble.appendChild(p);
+            bubble.appendChild(playBtn);
+            bubble.style.backgroundColor = 'var(--primary-light)';
+            bubble.style.color = 'white';
             
-            if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-            if (logoutBtnApp) logoutBtnApp.addEventListener('click', handleLogout);
+        } else {
+            bubble.appendChild(p);
+        }
+        
+        messageDiv.appendChild(bubble);
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-            if (onboardingForm) onboardingForm.addEventListener("submit", handleSignUp);
-            if (loginForm) loginForm.addEventListener('submit', handleLogin);
+    function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.classList.add('ai-message');
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = `<span class="ai-avatar">👩‍🌾</span><div class="message-bubble typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+        chatBox.appendChild(typingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        if (aiStatus) {
+            aiStatus.textContent = "Typing...";
+            aiStatus.classList.remove('online');
+            aiStatus.classList.add('typing');
+        }
+    }
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+        if (aiStatus) {
+            aiStatus.textContent = "Online";
+            aiStatus.classList.remove('typing');
+            aiStatus.classList.add('online');
+        }
+    }
+
+    // --- REFACTORED AI RESPONSE FUNCTION ---
+    async function getAiResponse(query) {
+        if (!GEMINI_API_KEY || GEMINI_API_KEY.length < 10) {
+            return "Vera: I can't talk right now. Please update the **GEMINI_API_KEY** in the script to enable the AI assistant.";
+        }
+        
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_TEXT_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+        
+        const systemPrompt = `You are Vera, a helpful and highly knowledgeable **Precision Farming AI Assistant** for Smart Harvesters. You specialize in crops common to India, like Rice, Rubber, and Cardamom, focusing on sustainability, soil health, and market resilience. The user is ${farmerName}, located near ${farmerLocation}, and is growing ${farmerCrop}. You must answer concisely, using expert-level knowledge, and ONLY in the ${langName} language.`;
+        
+        const payload = {
+            contents: [{ parts: [{ text: query }] }],
+            tools: [{ "google_search": {} }], // Enable Google Search grounding
+            systemInstruction: {
+                parts: [{ text: systemPrompt }]
+            },
+        };
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+            const data = await response.json();
+            
+            let responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            // Add sources if available
+            const groundingMetadata = data.candidates?.[0]?.groundingMetadata;
+            if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                const sources = groundingMetadata.groundingAttributions
+                    .map(attribution => attribution.web?.title)
+                    .filter(title => title);
+                
+                if (sources.length > 0) {
+                    const uniqueSources = Array.from(new Set(sources)).slice(0, 3);
+                    const sourceText = uniqueSources.join(', ');
+                    responseText += `\n\n_(Sources: ${sourceText})_`;
+                }
+            }
+
+            if (responseText) return responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            return "Vera: I'm sorry, I couldn't generate a response. The API returned an invalid format.";
+        } catch (error) {
+            console.error("Error fetching AI response:", error);
+            return "Vera: I'm having trouble connecting right now. Please check your API key or try again later.";
+        }
+    }
+    // --- END REFACTORED AI RESPONSE FUNCTION ---
+
+    async function processQuery(query) {
+        if (!query.trim()) return;
+        addMessage(query, 'user');
+        textInput.value = '';
+        showTypingIndicator();
+        const aiResponse = await getAiResponse(query);
+        removeTypingIndicator();
+        addMessage(aiResponse, 'ai');
+    }
+
+    // --- SpeechRecognition Logic (Removed voiceBtn logic from function for cleanliness) ---
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition && voiceBtn) {
+        const recognition = new SpeechRecognition();
+        const recognizerLang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'ta' ? 'ta-IN' : (currentLang === 'ma' ? 'ml-IN' : 'en-IN'));
+        recognition.lang = recognizerLang;
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        voiceBtn.addEventListener('click', () => {
+            try {
+                recognition.start();
+                aiStatus.textContent = "Listening...";
+                aiStatus.classList.remove('online');
+                aiStatus.classList.add('typing');
+                voiceBtn.style.color = '#F44336';
+            } catch (e) {
+                console.error("Speech recognition already running or not allowed.", e);
+                aiStatus.textContent = "Error";
+                voiceBtn.style.color = 'var(--primary-color)';
+            }
         });
+        
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            if (textInput) textInput.value = transcript;
+            processQuery(transcript);
+        };
+        
+        recognition.onend = () => {
+            voiceBtn.style.color = 'var(--primary-color)';
+        };
+        
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error:", event.error);
+            aiStatus.textContent = "Online";
+            aiStatus.classList.remove('typing');
+            aiStatus.classList.add('online');
+            voiceBtn.style.color = 'var(--primary-color)';
+        };
+    } else if (voiceBtn) {
+        console.warn("Speech Recognition not supported by your browser.");
+        voiceBtn.style.display = 'none';
+    }
+
+
+    const welcomeMessage = {
+        en: `Hello ${farmerName}! I'm Vera, your personalized farm advisor. I specialize in market trends, water stress, and pest solutions. How can I help with your ${farmerCrop} farm today?`,
+        hi: `नमस्ते ${farmerName}! मैं वेरा हूँ, आपकी व्यक्तिगत कृषि सलाहकार। मैं बाजार के रुझान, जल तनाव और कीट समाधान में विशेषज्ञ हूँ। मैं आज आपके ${farmerCrop} खेत में कैसे मदद कर सकती हूँ?`,
+        ta: `வணக்கம் ${farmerName}! நான் வேரா, உங்கள் தனிப்பயனாக்கப்பட்ட பண்ணை ஆலோசகர். சந்தை போக்குகள், நீர் அழுத்தம் மற்றும் பூச்சி தீர்வுகளில் நான் நிபுணத்துவம் பெற்றவள். இன்று உங்கள் ${farmerCrop} பண்ணைக்கு நான் எப்படி உதவ முடியும்?`,
+        ma: `ഹലോ ${farmerName}! ഞാൻ വേര, നിങ്ങളുടെ വ്യക്തിഗത കാർഷിക ഉപദേഷ്ടാവ്. വിപണി പ്രവണതകൾ, ജലക്ഷാമം, കീടപരിഹാരങ്ങൾ എന്നിവയിൽ ഞാൻ വിദഗ്ദ്ധയാണ്. ഇന്ന് നിങ്ങളുടെ ${farmerCrop} കൃഷിയിടത്തിൽ ഞാൻ എങ്ങനെ സഹായിക്കും?`
+    };
+
+    // Only add welcome message if the chat is truly empty (prevents duplicates on language change)
+    if (chatBox.children.length === 0) {
+        addMessage(welcomeMessage[currentLang] || welcomeMessage.en, 'ai');
+    }
+    
+    if (sendBtn) sendBtn.addEventListener('click', () => processQuery(textInput.value));
+    if (textInput) textInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') processQuery(textInput.value);
+    });
+}
+
+// ----------------------------------------------------------------------
+// --- CORE LOGIC: DIAGNOSIS TOOL ---
+// ----------------------------------------------------------------------
+
+function handleDiagnosis(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imgPreview = document.getElementById('imagePreview');
+        imgPreview.src = e.target.result;
+        imgPreview.style.display = 'block';
+        document.getElementById('diagnosisPlaceholder').style.display = 'none';
+        
+        // Show loading and hide previous result
+        const loading = document.getElementById('diagnosisLoading');
+        const resultCard = document.getElementById('diagnosisResult');
+        loading.style.display = 'block';
+        resultCard.style.display = 'none';
+
+        // --- Mock Diagnosis Logic (Simulating AI processing) ---
+        setTimeout(() => {
+            const profile = JSON.parse(localStorage.getItem("smartHarvestersProfile")) || { crop: 'Default' };
+            const cropType = profile.crop;
+            const diagnosisKey = ['Pest', 'Disease', 'Default'][Math.floor(Math.random() * 3)];
+            
+            const diagnosisResult = DEMO_DATA.diagnosis[cropType] ? 
+                                        (DEMO_DATA.diagnosis[cropType][diagnosisKey] || DEMO_DATA.diagnosis.Default) : 
+                                        DEMO_DATA.diagnosis.Default;
+            
+            const currentLang = localStorage.getItem('currentLanguage') || 'en';
+            const isDefault = diagnosisKey === 'Default';
+            
+            // Note: LOCALE_DATA doesn't have diagnosis names, so we use English fallback for the mock data result title
+            const nameKey = isDefault ? 'Nutrient Deficiency (Nitrogen)' : diagnosisResult.name;
+            const summaryText = diagnosisResult.summary;
+            const treatments = diagnosisResult.treatment;
+
+            document.getElementById('resultTitle').textContent = nameKey;
+            document.getElementById('resultSummary').textContent = summaryText;
+            document.getElementById('treatmentList').innerHTML = treatments.map(item => `<li>${item}</li>`).join('');
+
+            loading.style.display = 'none';
+            resultCard.style.display = 'block';
+            
+            // Reapply language for titles/buttons
+            updateContentLanguage(currentLang);
+        }, 2500); // 2.5 second delay to simulate API call
+    };
+    reader.readAsDataURL(file);
+}
+
+// ----------------------------------------------------------------------
+// --- EVENT LISTENERS ---
+// ----------------------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initial language setup
+    const initialLang = localStorage.getItem('currentLanguage') || 'en';
+    
+    // Set up language selector event listeners
+    if (languageSelectorDashboard) languageSelectorDashboard.addEventListener('change', (e) => showPage('dashboard-page'));
+    if (languageSelectorAi) languageSelectorAi.addEventListener('change', (e) => initializeAiAssistant());
+
+    // Core Auth/Session Management
+    checkUserSession();
+
+    // Modals & Links
+    if (signupBtn) signupBtn.addEventListener('click', (e) => { e.preventDefault(); onboardingModal.classList.add("active"); });
+    if (heroSignupBtn) heroSignupBtn.addEventListener('click', (e) => { e.preventDefault(); onboardingModal.classList.add("active"); });
+    if (loginBtn) loginBtn.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.add("active"); });
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+    if (logoutBtnApp) logoutBtnApp.addEventListener('click', handleLogout);
+    if (onboardingForm) onboardingForm.addEventListener("submit", handleSignUp);
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
+    
+    // Diagnosis Tool Listener
+    const fileInputDiagnosis = document.getElementById('fileInputDiagnosis');
+    if(fileInputDiagnosis) fileInputDiagnosis.addEventListener('change', handleDiagnosis);
+});
     </script>
+    
 </body>
 </html>
